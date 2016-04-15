@@ -1,45 +1,23 @@
 import {IEventHandlerT} from './interfaces/iEventHandlerT';
 import {IRaisableEventT} from './interfaces/iRaisableEventT';
+import {ConditionalEventT} from './conditionalEventT';
 
 export class EventT<T> implements IRaisableEventT<T> {
-  private _eventHandlers: IEventHandlerT<T>[] = [];
+  private _conditionalEventT: ConditionalEventT<T> = new ConditionalEventT<T>();
 
   public on(eventHandler: IEventHandlerT<T>): void {
-    if (!this._isEventHandlerRegistered(eventHandler)) {
-      this._eventHandlers.push(eventHandler);
-    }
+    this._conditionalEventT.on(eventHandler);
   }
 
   public off(eventHandler: IEventHandlerT<T>): void {
-    var indexOfEventHandler: number = this._eventHandlers.indexOf(eventHandler);
-
-    this._eventHandlers.splice(indexOfEventHandler, 1);
+    this._conditionalEventT.off(eventHandler);
   }
 
   public raise(data: T): void {
-    this._eventHandlers.forEach(
-      (_eventHandler: IEventHandlerT<T>) => {
-        _eventHandler(data);
-      }
-    )
+    this._conditionalEventT.raise(data);
   }
 
   public raiseSafe(data: T): void {
-    this._eventHandlers.forEach(
-      (_eventHandler: IEventHandlerT<T>) => {
-        this._callEventHandlerSafe(_eventHandler, data);
-      }
-    )
-  }
-
-  private _isEventHandlerRegistered(eventHandler: IEventHandlerT<T>): boolean {
-    return this._eventHandlers.indexOf(eventHandler) >= 0;
-  }
-
-  private _callEventHandlerSafe(eventHandler: IEventHandlerT<T>, data: T): void {
-    try {
-      eventHandler(data);
-    } catch (e) {
-    }
+    this._conditionalEventT.raiseSafe(data);
   }
 }
