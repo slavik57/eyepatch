@@ -1,0 +1,22 @@
+{
+  "name": "eyepatch",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests --recursive -c -b"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slavik57/eyepatch.git"
+  },
+  "keywords": [
+    "eyepatch"
+  ],
+  "author": "Slava Shpitalny <slavik57@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slavik57/eyepatch/issues"
+  },
+  "homepage": "https://github.com/slavik57/eyepatch#readme"
+}
