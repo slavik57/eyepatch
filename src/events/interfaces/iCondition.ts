@@ -1,3 +1,3 @@
 export interface IConditionT<T> {
-  (data: T) : boolean;
+  (data: T): boolean;
 }

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import {IEventHandlerT} from './interfaces/iEventHandlerT';
-import {IEventT} from './interfaces/iEventT';
+import {IEventHandlerT} from './interfaces/iEventHandler';
+import {IEventT} from './interfaces/iEvent';
 import {EventT} from './eventT';
 
 interface ITestEventHandler<T> extends IEventHandlerT<T> {

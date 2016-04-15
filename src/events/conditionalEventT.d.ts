@@ -1,6 +1,6 @@
-import { IEventHandlerT } from './interfaces/iEventHandlerT';
-import { IConditionT } from './interfaces/iConditionT';
-import { IConditionalRaisableEventT } from './interfaces/iConditionalRaisableEventT';
+import { IEventHandlerT } from './interfaces/iEventHandler';
+import { IConditionT } from './interfaces/iCondition';
+import { IConditionalRaisableEventT } from './interfaces/iConditionalRaisableEvent';
 export declare class ConditionalEventT<T> implements IConditionalRaisableEventT<T> {
     private _defaultTruthyCondition;
     private _conditionalEventHandlers;

@@ -1,5 +1,5 @@
-import {IEventHandlerT} from './interfaces/iEventHandlerT';
-import {IRaisableEventT} from './interfaces/iRaisableEventT';
+import {IEventHandlerT} from './interfaces/iEventHandler';
+import {IRaisableEventT} from './interfaces/iRaisableEvent';
 import {ConditionalEventT} from './conditionalEventT';
 
 export class EventT<T> implements IRaisableEventT<T> {
