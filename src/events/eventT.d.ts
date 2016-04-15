@@ -1,5 +1,5 @@
-import { IEventHandlerT } from './iEventHandlerT';
-import { IRaisableEventT } from './iRaisableEventT';
+import { IEventHandlerT } from './interfaces/iEventHandlerT';
+import { IRaisableEventT } from './interfaces/iRaisableEventT';
 export declare class EventT<T> implements IRaisableEventT<T> {
     private _eventHandlers;
     on(eventHandler: IEventHandlerT<T>): void;

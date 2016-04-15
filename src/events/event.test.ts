@@ -1,6 +1,6 @@
 import { expect, AssertionError } from 'chai';
-import {IEventHandler} from './iEventHandler';
-import {IEvent} from './iEvent';
+import {IEventHandler} from './interfaces/iEventHandler';
+import {IEvent} from './interfaces/iEvent';
 import {Event} from './event';
 
 interface ITestEventHandler extends IEventHandler {
