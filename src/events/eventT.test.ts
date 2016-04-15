@@ -1,10 +1,10 @@
-import { expect, AssertionError } from 'chai';
-import {IEventHandlerT} from './iEventHandlerT';
-import {IEventT} from './iEventT';
+import { expect } from 'chai';
+import {IEventHandlerT} from './interfaces/iEventHandler';
+import {IEventT} from './interfaces/iEvent';
 import {EventT} from './eventT';
 
 interface ITestEventHandler<T> extends IEventHandlerT<T> {
-  actualDataThatWasCalled: T[];
+  actualDataThatWasCalledWith: T[];
 }
 
 describe('EventT', () => {
@@ -14,26 +14,24 @@ describe('EventT', () => {
     event = new EventT<any>();
   });
 
-  function createEventHandler<T>(event: IEventT<T>): ITestEventHandler<T> {
+  function createEventHandler<T>(): ITestEventHandler<T> {
     var eventHandler: ITestEventHandler<T> = <any>((_data: T) => {
-      eventHandler.actualDataThatWasCalled.push(_data);
+      eventHandler.actualDataThatWasCalledWith.push(_data);
     });
 
-    eventHandler.actualDataThatWasCalled = [];
+    eventHandler.actualDataThatWasCalledWith = [];
 
     return eventHandler;
   }
 
-  function registerThrowingEventHandler<T>(event: IEventT<T>): ITestEventHandler<T> {
+  function createThrowingEventHandler<T>(): ITestEventHandler<T> {
     var eventHandler: ITestEventHandler<T> = <any>((_data: T) => {
-      eventHandler.actualDataThatWasCalled.push(_data);
+      eventHandler.actualDataThatWasCalledWith.push(_data);
 
       throw 'some error';
     });
 
-    eventHandler.actualDataThatWasCalled = [];
-
-    event.on(eventHandler);
+    eventHandler.actualDataThatWasCalledWith = [];
 
     return eventHandler;
   }
@@ -46,13 +44,44 @@ describe('EventT', () => {
   }
 
   function verifyEventHandlerWasRaisedOnce<T>(eventHandler: ITestEventHandler<T>, data: T): void {
-    expect(eventHandler.actualDataThatWasCalled.length).to.be.equal(1);
-    expect(eventHandler.actualDataThatWasCalled[0]).to.be.equal(data);
+    expect(eventHandler.actualDataThatWasCalledWith.length).to.be.equal(1);
+    expect(eventHandler.actualDataThatWasCalledWith[0]).to.be.equal(data);
   }
 
   function verifyEventHandlerWasNeverRaised<T>(eventHandler: ITestEventHandler<T>): void {
-    expect(eventHandler.actualDataThatWasCalled.length).to.be.equal(0);
+    expect(eventHandler.actualDataThatWasCalledWith.length).to.be.equal(0);
   }
+
+  describe('on', () => {
+    it('registering same event twice should not throw error', () => {
+      // Arrange
+      var handler = createEventHandler();
+
+      // Act
+      var registeringAction = () => {
+        event.on(handler);
+        event.on(handler);
+      }
+
+      // Assert
+      expect(registeringAction).to.not.throw();
+    })
+  });
+
+  describe('off', () => {
+    it('unregistering not registered event should not throw error', () => {
+      // Arrange
+      var handler = createEventHandler();
+
+      // Act
+      var unregisteringAction = () => {
+        event.off(handler);
+      }
+
+      // Assert
+      expect(unregisteringAction).to.not.throw();
+    })
+  });
 
   describe('raise', () => {
     it('raising unregistered event should not throw errors', () => {
@@ -61,9 +90,9 @@ describe('EventT', () => {
 
     it('raising on registered event should raise event on all registratios', () => {
       // Arrange
-      var handler1 = createEventHandler(event);
-      var handler2 = createEventHandler(event);
-      var handler3 = createEventHandler(event);
+      var handler1 = createEventHandler();
+      var handler2 = createEventHandler();
+      var handler3 = createEventHandler();
 
       var data = createData();
 
@@ -79,9 +108,24 @@ describe('EventT', () => {
       verifyEventHandlerWasRaisedOnce(handler3, data);
     });
 
+    it('registering twice with same event handler, raising, should raise once', () => {
+      // Arrange
+      var handler = createEventHandler();
+
+      var data = createData();
+
+      // Act
+      event.on(handler);
+      event.on(handler);
+      event.raise(data);
+
+      // Assert
+      verifyEventHandlerWasRaisedOnce(handler, data);
+    });
+
     it('registering event handler that throws an error should throw error', () => {
       // Arrange
-      var throwingHandler = registerThrowingEventHandler(event);
+      var throwingHandler = createThrowingEventHandler();
 
       var data = createData();
 
@@ -96,8 +140,8 @@ describe('EventT', () => {
 
     it('registering event handler that throws an error should not raise the next event handler', () => {
       // Arrange
-      var throwingHandler = registerThrowingEventHandler(event);
-      var handler = createEventHandler(event);
+      var throwingHandler = createThrowingEventHandler();
+      var handler = createEventHandler();
 
       var data = createData();
 
@@ -114,8 +158,8 @@ describe('EventT', () => {
 
     it('unregistering event handler should not raise it', () => {
       // Arrange
-      var handler = createEventHandler(event);
-      var handlerToUnregister = createEventHandler(event);
+      var handler = createEventHandler();
+      var handlerToUnregister = createEventHandler();
 
       var data = createData();
 
@@ -132,11 +176,11 @@ describe('EventT', () => {
 
     it('unregistering event handler should raise the not ramoved event handlers', () => {
       // Arrange
-      var handler1 = createEventHandler(event);
-      var handler2 = createEventHandler(event);
-      var handlerToUnregister = createEventHandler(event);
-      var handler3 = createEventHandler(event);
-      var handler4 = createEventHandler(event);
+      var handler1 = createEventHandler();
+      var handler2 = createEventHandler();
+      var handlerToUnregister = createEventHandler();
+      var handler3 = createEventHandler();
+      var handler4 = createEventHandler();
 
       var data = createData();
 
@@ -155,6 +199,7 @@ describe('EventT', () => {
       verifyEventHandlerWasRaisedOnce(handler2, data);
       verifyEventHandlerWasRaisedOnce(handler3, data);
       verifyEventHandlerWasRaisedOnce(handler4, data);
+      verifyEventHandlerWasNeverRaised(handlerToUnregister);
     });
   });
 
@@ -165,9 +210,9 @@ describe('EventT', () => {
 
     it('raising on registered event should raise event on all registratios', () => {
       // Arrange
-      var handler1 = createEventHandler(event);
-      var handler2 = createEventHandler(event);
-      var handler3 = createEventHandler(event);
+      var handler1 = createEventHandler();
+      var handler2 = createEventHandler();
+      var handler3 = createEventHandler();
 
       var data = createData();
 
@@ -183,9 +228,24 @@ describe('EventT', () => {
       verifyEventHandlerWasRaisedOnce(handler3, data);
     });
 
+    it('registering twice with same event handler, raising, should raise once', () => {
+      // Arrange
+      var handler = createEventHandler();
+
+      var data = createData();
+
+      // Act
+      event.on(handler);
+      event.on(handler);
+      event.raiseSafe(data);
+
+      // Assert
+      verifyEventHandlerWasRaisedOnce(handler, data);
+    });
+
     it('registering event handler that throws an error should not throw error', () => {
       // Arrange
-      var throwingHandler = registerThrowingEventHandler(event);
+      var throwingHandler = createThrowingEventHandler();
 
       var data = createData();
 
@@ -200,8 +260,8 @@ describe('EventT', () => {
 
     it('registering event handler that throws an error should raise the next event handler', () => {
       // Arrange
-      var throwingHandler = registerThrowingEventHandler(event);
-      var handler = createEventHandler(event);
+      var throwingHandler = createThrowingEventHandler();
+      var handler = createEventHandler();
 
       var data = createData();
 
@@ -218,8 +278,8 @@ describe('EventT', () => {
 
     it('unregistering event handler should not raise it', () => {
       // Arrange
-      var handler = createEventHandler(event);
-      var handlerToUnregister = createEventHandler(event);
+      var handler = createEventHandler();
+      var handlerToUnregister = createEventHandler();
 
       var data = createData();
 
@@ -236,11 +296,11 @@ describe('EventT', () => {
 
     it('unregistering event handler should raise the not ramoved event handlers', () => {
       // Arrange
-      var handler1 = createEventHandler(event);
-      var handler2 = createEventHandler(event);
-      var handlerToUnregister = createEventHandler(event);
-      var handler3 = createEventHandler(event);
-      var handler4 = createEventHandler(event);
+      var handler1 = createEventHandler();
+      var handler2 = createEventHandler();
+      var handlerToUnregister = createEventHandler();
+      var handler3 = createEventHandler();
+      var handler4 = createEventHandler();
 
       var data = createData();
 
@@ -259,6 +319,7 @@ describe('EventT', () => {
       verifyEventHandlerWasRaisedOnce(handler2, data);
       verifyEventHandlerWasRaisedOnce(handler3, data);
       verifyEventHandlerWasRaisedOnce(handler4, data);
+      verifyEventHandlerWasNeverRaised(handlerToUnregister);
     });
   });
 });

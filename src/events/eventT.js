@@ -1,37 +1,20 @@
 "use strict";
+var conditionalEventT_1 = require('./conditionalEventT');
 var EventT = (function () {
     function EventT() {
-        this._eventHandlers = [];
+        this._conditionalEventT = new conditionalEventT_1.ConditionalEventT();
     }
     EventT.prototype.on = function (eventHandler) {
-        if (!this._isEventHandlerRegistered(eventHandler)) {
-            this._eventHandlers.push(eventHandler);
-        }
+        this._conditionalEventT.on(eventHandler);
     };
     EventT.prototype.off = function (eventHandler) {
-        var indexOfEventHandler = this._eventHandlers.indexOf(eventHandler);
-        this._eventHandlers.splice(indexOfEventHandler, 1);
+        this._conditionalEventT.off(eventHandler);
     };
     EventT.prototype.raise = function (data) {
-        this._eventHandlers.forEach(function (_eventHandler) {
-            _eventHandler(data);
-        });
+        this._conditionalEventT.raise(data);
     };
     EventT.prototype.raiseSafe = function (data) {
-        var _this = this;
-        this._eventHandlers.forEach(function (_eventHandler) {
-            _this._callEventHandlerSafe(_eventHandler, data);
-        });
-    };
-    EventT.prototype._isEventHandlerRegistered = function (eventHandler) {
-        return this._eventHandlers.indexOf(eventHandler) >= 0;
-    };
-    EventT.prototype._callEventHandlerSafe = function (eventHandler, data) {
-        try {
-            eventHandler(data);
-        }
-        catch (e) {
-        }
+        this._conditionalEventT.raiseSafe(data);
     };
     return EventT;
 }());

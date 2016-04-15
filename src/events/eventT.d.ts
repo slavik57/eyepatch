@@ -1,11 +1,9 @@
-import { IEventHandlerT } from './iEventHandlerT';
-import { IRaisableEventT } from './iRaisableEventT';
+import { IEventHandlerT } from './interfaces/iEventHandler';
+import { IRaisableEventT } from './interfaces/iRaisableEvent';
 export declare class EventT<T> implements IRaisableEventT<T> {
-    private _eventHandlers;
+    private _conditionalEventT;
     on(eventHandler: IEventHandlerT<T>): void;
     off(eventHandler: IEventHandlerT<T>): void;
     raise(data: T): void;
     raiseSafe(data: T): void;
-    private _isEventHandlerRegistered(eventHandler);
-    private _callEventHandlerSafe(eventHandler, data);
 }
