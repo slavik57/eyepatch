@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {IConditionT} from './interfaces/iConditionT';
 import {IEventHandlerT} from './interfaces/iEventHandlerT';
-import {IConditinalEventT} from './interfaces/iConditionalEventT';
+import {IConditionalEventT} from './interfaces/iConditionalEventT';
 import {ConditionalEventT} from './conditionalEventT';
 
 interface ITestEventHandler<T> extends IEventHandlerT<T> {

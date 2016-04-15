@@ -1,6 +1,6 @@
 import { IEventHandlerT } from './iEventHandlerT';
 import { IConditionT } from './iConditionT';
-export interface IConditinalEventT<T> {
+export interface IConditionalEventT<T> {
     on(eventHandler: IEventHandlerT<T>, condition?: IConditionT<T>): void;
     off(eventHandler: IEventHandlerT<T>, condition?: IConditionT<T>): void;
 }
