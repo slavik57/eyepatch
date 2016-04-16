@@ -8,10 +8,12 @@ export declare class ObservableCollection<T> implements IObservableCollection<T>
     readonly itemsChanged: IEventT<IItemsChangedEventArgs<T>>;
     add(item: T): void;
     addRange(items: T[]): void;
-    remove(item: T): void;
-    removeRange(items: T[]): void;
+    removeMatching(item: T): void;
+    removeMatchingRange(items: T[]): void;
+    removeAtIndex(index: number): void;
+    removeAtIndices(indices: number[]): void;
     clear(): void;
-    private _isItemInsideArray(arrayToCheckIn, item);
+    private _isItemInsideArray<U>(arrayToCheckIn, item);
     private _raiseItemsAdded(items);
     private _raiseItemsRemoved(items);
     private _raiseItemsChangedIfNeeded(eventArgs);

@@ -27,14 +27,14 @@ export class ObservableCollection<T> implements IObservableCollection<T> {
     this._raiseItemsAdded(items);
   }
 
-  public remove(item: T): void {
+  public removeMatching(item: T): void {
     var removedItems = this._items.filter(_item => _item === item);
     this._items = this._items.filter(_item => _item !== item);
 
     this._raiseItemsRemoved(removedItems);
   }
 
-  public removeRange(items: T[]): void {
+  public removeMatchingRange(items: T[]): void {
     if (!items) {
       throw 'removeRange cannot be called with null or undefined';
     }
@@ -48,6 +48,41 @@ export class ObservableCollection<T> implements IObservableCollection<T> {
     this._raiseItemsRemoved(removedItems);
   }
 
+  public removeAtIndex(index: number): void {
+    if (this._items.length <= index) {
+      return;
+    }
+
+    var itemToRemove = this._items[index];
+
+    this._items.splice(index, 1);
+
+    this._raiseItemsRemoved([itemToRemove]);
+  }
+
+  public removeAtIndices(indices: number[]): void {
+    if (!indices) {
+      throw 'removeAtIndices cannot be called with null or undefined';
+    }
+
+    var filteredItems = [];
+    var removedItems = [];
+
+    for (var i = 0; i < this._items.length; i++) {
+      var item = this._items[i];
+
+      if (this._isItemInsideArray(indices, i)) {
+        removedItems.push(item);
+      } else {
+        filteredItems.push(item);
+      }
+    }
+
+    this._items = filteredItems;
+
+    this._raiseItemsRemoved(removedItems);
+  }
+
   public clear(): void {
     var removedItems = this._items;
     this._items = [];
@@ -55,7 +90,7 @@ export class ObservableCollection<T> implements IObservableCollection<T> {
     this._raiseItemsRemoved(removedItems);
   }
 
-  private _isItemInsideArray(arrayToCheckIn: T[], item: T): boolean {
+  private _isItemInsideArray<U>(arrayToCheckIn: U[], item: U): boolean {
     return arrayToCheckIn.indexOf(item) >= 0;
   }
 

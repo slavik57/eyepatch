@@ -101,16 +101,16 @@ describe('ObservableCollection', function () {
             verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, []);
         });
     });
-    describe('remove', function () {
+    describe('removeMatching', function () {
         it('removing non existing item should not throw error', function () {
             var item = createItem();
-            var removeAction = function () { return observableCollection.remove(item); };
+            var removeAction = function () { return observableCollection.removeMatching(item); };
             chai_1.expect(removeAction).to.not.throw();
         });
         it('removing non existing item should not raise events', function () {
             var item = createItem();
             var eventRegistration = registerToItemsChangedEvent(observableCollection);
-            observableCollection.remove(item);
+            observableCollection.removeMatching(item);
             verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, []);
         });
         it('removing added items should remove them', function () {
@@ -118,7 +118,16 @@ describe('ObservableCollection', function () {
             var itemToRemove = items[2];
             var expectedItems = [items[0], items[1], items[3], items[4]];
             observableCollection.addRange(items);
-            observableCollection.remove(itemToRemove);
+            observableCollection.removeMatching(itemToRemove);
+            verifyCollectionHasItems(observableCollection, expectedItems);
+        });
+        it('removing item added multiple times should remove all', function () {
+            var items = createItems(5);
+            var itemAppearingMultipleTimes = items[1];
+            items.push(itemAppearingMultipleTimes);
+            var expectedItems = [items[0], items[2], items[3], items[4]];
+            observableCollection.addRange(items);
+            observableCollection.removeMatching(itemAppearingMultipleTimes);
             verifyCollectionHasItems(observableCollection, expectedItems);
         });
         it('removing added items should raise events correctly', function () {
@@ -127,8 +136,8 @@ describe('ObservableCollection', function () {
             var itemToRemove2 = items[3];
             observableCollection.addRange(items);
             var eventRegistration = registerToItemsChangedEvent(observableCollection);
-            observableCollection.remove(itemToRemove1);
-            observableCollection.remove(itemToRemove2);
+            observableCollection.removeMatching(itemToRemove1);
+            observableCollection.removeMatching(itemToRemove2);
             var expectedEvents = [
                 {
                     added: [],
@@ -141,13 +150,34 @@ describe('ObservableCollection', function () {
             ];
             verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
         });
+        it('removing item added multiple times should raise events correctly', function () {
+            var items = createItems(5);
+            var itemAppearingMultipleTimes = items[1];
+            items.push(itemAppearingMultipleTimes);
+            var itemToRemove2 = items[3];
+            observableCollection.addRange(items);
+            var eventRegistration = registerToItemsChangedEvent(observableCollection);
+            observableCollection.removeMatching(itemAppearingMultipleTimes);
+            observableCollection.removeMatching(itemToRemove2);
+            var expectedEvents = [
+                {
+                    added: [],
+                    removed: [itemAppearingMultipleTimes, itemAppearingMultipleTimes]
+                },
+                {
+                    added: [],
+                    removed: [itemToRemove2]
+                }
+            ];
+            verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+        });
     });
-    describe('removeRange', function () {
+    describe('removeMatchingRange', function () {
         it('removing with null/undefined should throw error', function () {
             var nullItems = null;
             var undefinedItems = null;
-            var removeWithNullAction = function () { return observableCollection.removeRange(nullItems); };
-            var removeWithUndefinedAction = function () { return observableCollection.removeRange(undefinedItems); };
+            var removeWithNullAction = function () { return observableCollection.removeMatchingRange(nullItems); };
+            var removeWithUndefinedAction = function () { return observableCollection.removeMatchingRange(undefinedItems); };
             chai_1.expect(removeWithNullAction).to.throw();
             chai_1.expect(removeWithUndefinedAction).to.throw();
         });
@@ -155,21 +185,21 @@ describe('ObservableCollection', function () {
             var nullItems = null;
             var undefinedItems = null;
             var eventRegistration = registerToItemsChangedEvent(observableCollection);
-            var removeWithNullAction = function () { return observableCollection.removeRange(nullItems); };
-            var removeWithUndefinedAction = function () { return observableCollection.removeRange(undefinedItems); };
+            var removeWithNullAction = function () { return observableCollection.removeMatchingRange(nullItems); };
+            var removeWithUndefinedAction = function () { return observableCollection.removeMatchingRange(undefinedItems); };
             chai_1.expect(removeWithNullAction).to.throw();
             chai_1.expect(removeWithUndefinedAction).to.throw();
             verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, []);
         });
         it('removing non existing items should not throw error', function () {
             var items = createItems(3);
-            var removeAction = function () { return observableCollection.removeRange(items); };
+            var removeAction = function () { return observableCollection.removeMatchingRange(items); };
             chai_1.expect(removeAction).to.not.throw();
         });
         it('removing non existing item should not raise events', function () {
             var items = createItems(3);
             var eventRegistration = registerToItemsChangedEvent(observableCollection);
-            observableCollection.removeRange(items);
+            observableCollection.removeMatchingRange(items);
             verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, []);
         });
         it('removing added items should remove them', function () {
@@ -177,7 +207,17 @@ describe('ObservableCollection', function () {
             var itemsToRemove = [items[1], items[3]];
             var expectedItems = [items[0], items[2], items[4]];
             observableCollection.addRange(items);
-            observableCollection.removeRange(itemsToRemove);
+            observableCollection.removeMatchingRange(itemsToRemove);
+            verifyCollectionHasItems(observableCollection, expectedItems);
+        });
+        it('removing items added multiple times should remove them', function () {
+            var items = createItems(5);
+            var itemAddedMultipleTimes = items[1];
+            items.push(itemAddedMultipleTimes);
+            var itemsToRemove = [items[1], items[3]];
+            var expectedItems = [items[0], items[2], items[4]];
+            observableCollection.addRange(items);
+            observableCollection.removeMatchingRange(itemsToRemove);
             verifyCollectionHasItems(observableCollection, expectedItems);
         });
         it('removing added items should raise events correctly', function () {
@@ -186,12 +226,197 @@ describe('ObservableCollection', function () {
             var itemsToRemove2 = [items[3], items[4]];
             observableCollection.addRange(items);
             var eventRegistration = registerToItemsChangedEvent(observableCollection);
-            observableCollection.removeRange(itemsToRemove1);
-            observableCollection.removeRange(itemsToRemove2);
+            observableCollection.removeMatchingRange(itemsToRemove1);
+            observableCollection.removeMatchingRange(itemsToRemove2);
             var expectedEvents = [
                 {
                     added: [],
                     removed: itemsToRemove1
+                },
+                {
+                    added: [],
+                    removed: itemsToRemove2
+                }
+            ];
+            verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+        });
+        it('removing items added multiple times should raise events correctly', function () {
+            var items = createItems(5);
+            var itemAddedMultipleTimes = items[1];
+            items.push(itemAddedMultipleTimes);
+            var itemsToRemove1 = [itemAddedMultipleTimes, items[2]];
+            var itemsToRemove2 = [items[3], items[4]];
+            observableCollection.addRange(items);
+            var eventRegistration = registerToItemsChangedEvent(observableCollection);
+            observableCollection.removeMatchingRange(itemsToRemove1);
+            observableCollection.removeMatchingRange(itemsToRemove2);
+            var expectedEvents = [
+                {
+                    added: [],
+                    removed: [itemAddedMultipleTimes, items[2], itemAddedMultipleTimes]
+                },
+                {
+                    added: [],
+                    removed: itemsToRemove2
+                }
+            ];
+            verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+        });
+    });
+    describe('removeAtIndex', function () {
+        it('removing non existing index should not throw error', function () {
+            var item = createItem();
+            var removeAction = function () { return observableCollection.removeAtIndex(0); };
+            chai_1.expect(removeAction).to.not.throw();
+        });
+        it('removing non existing index should not raise events', function () {
+            var item = createItem();
+            var eventRegistration = registerToItemsChangedEvent(observableCollection);
+            observableCollection.removeAtIndex(123);
+            verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, []);
+        });
+        it('should remove item at index', function () {
+            var items = createItems(5);
+            var itemIndexToRemove = 2;
+            var expectedItems = [items[0], items[1], items[3], items[4]];
+            observableCollection.addRange(items);
+            observableCollection.removeAtIndex(itemIndexToRemove);
+            verifyCollectionHasItems(observableCollection, expectedItems);
+        });
+        it('removing index of an item added multiple times should remove only one instance', function () {
+            var items = createItems(5);
+            var itemAppearingMultipleTimes = items[1];
+            items.push(itemAppearingMultipleTimes);
+            var expectedItems = [items[0], items[2], items[3], items[4], itemAppearingMultipleTimes];
+            observableCollection.addRange(items);
+            observableCollection.removeAtIndex(1);
+            verifyCollectionHasItems(observableCollection, expectedItems);
+        });
+        it('should raise events correctly', function () {
+            var items = createItems(5);
+            var itemToRemove1 = items[1];
+            var itemToRemove2 = items[3];
+            observableCollection.addRange(items);
+            var eventRegistration = registerToItemsChangedEvent(observableCollection);
+            observableCollection.removeAtIndex(1);
+            observableCollection.removeAtIndex(2);
+            var expectedEvents = [
+                {
+                    added: [],
+                    removed: [itemToRemove1]
+                },
+                {
+                    added: [],
+                    removed: [itemToRemove2]
+                }
+            ];
+            verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+        });
+        it('removing index of an item added multiple times should raise events correctly', function () {
+            var items = createItems(5);
+            var itemAppearingMultipleTimes = items[1];
+            items.push(itemAppearingMultipleTimes);
+            var itemToRemove2 = items[3];
+            observableCollection.addRange(items);
+            var eventRegistration = registerToItemsChangedEvent(observableCollection);
+            observableCollection.removeAtIndex(1);
+            observableCollection.removeAtIndex(2);
+            var expectedEvents = [
+                {
+                    added: [],
+                    removed: [itemAppearingMultipleTimes]
+                },
+                {
+                    added: [],
+                    removed: [itemToRemove2]
+                }
+            ];
+            verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+        });
+    });
+    describe('removeAtIndices', function () {
+        it('removing with null/undefined should throw error', function () {
+            var nullIndices = null;
+            var undefinedIndices = null;
+            var removeWithNullAction = function () { return observableCollection.removeAtIndices(nullIndices); };
+            var removeWithUndefinedAction = function () { return observableCollection.removeAtIndices(undefinedIndices); };
+            chai_1.expect(removeWithNullAction).to.throw();
+            chai_1.expect(removeWithUndefinedAction).to.throw();
+        });
+        it('removing with null/undefined should not raise events', function () {
+            var nullIndices = null;
+            var undefinedIndices = null;
+            var eventRegistration = registerToItemsChangedEvent(observableCollection);
+            var removeWithNullAction = function () { return observableCollection.removeAtIndices(nullIndices); };
+            var removeWithUndefinedAction = function () { return observableCollection.removeAtIndices(undefinedIndices); };
+            chai_1.expect(removeWithNullAction).to.throw();
+            chai_1.expect(removeWithUndefinedAction).to.throw();
+            verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, []);
+        });
+        it('removing non existing indexes should not throw error', function () {
+            var indices = [0, 123, 124, 1253];
+            var removeAction = function () { return observableCollection.removeAtIndices(indices); };
+            chai_1.expect(removeAction).to.not.throw();
+        });
+        it('removing non existing indices should not raise events', function () {
+            var indices = [123, 4613];
+            var eventRegistration = registerToItemsChangedEvent(observableCollection);
+            observableCollection.removeAtIndices(indices);
+            verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, []);
+        });
+        it('removing at existing indices should remove correct items', function () {
+            var items = createItems(5);
+            var indecesToRemove = [1, 3];
+            var expectedItems = [items[0], items[2], items[4]];
+            observableCollection.addRange(items);
+            observableCollection.removeAtIndices(indecesToRemove);
+            verifyCollectionHasItems(observableCollection, expectedItems);
+        });
+        it('removing indices of items added multiple times should remove only at specific places', function () {
+            var items = createItems(5);
+            var itemIndex = 1;
+            var itemAddedMultipleTimes = items[itemIndex];
+            items.push(itemAddedMultipleTimes);
+            var indicesToRemove = [itemIndex, 3];
+            var expectedItems = [items[0], items[2], items[4], itemAddedMultipleTimes];
+            observableCollection.addRange(items);
+            observableCollection.removeAtIndices(indicesToRemove);
+            verifyCollectionHasItems(observableCollection, expectedItems);
+        });
+        it('removing existing indices should raise events correctly', function () {
+            var items = createItems(5);
+            var itemsToRemove1 = [items[1], items[2]];
+            var itemsToRemove2 = [items[3], items[4]];
+            observableCollection.addRange(items);
+            var eventRegistration = registerToItemsChangedEvent(observableCollection);
+            observableCollection.removeAtIndices([1, 2]);
+            observableCollection.removeAtIndices([1, 2]);
+            var expectedEvents = [
+                {
+                    added: [],
+                    removed: itemsToRemove1
+                },
+                {
+                    added: [],
+                    removed: itemsToRemove2
+                }
+            ];
+            verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+        });
+        it('removing indices of items added multiple times should raise events correctly', function () {
+            var items = createItems(5);
+            var itemAddedMultipleTimes = items[1];
+            items.push(itemAddedMultipleTimes);
+            var itemsToRemove1 = [itemAddedMultipleTimes, items[2]];
+            var itemsToRemove2 = [items[3], items[4]];
+            observableCollection.addRange(items);
+            var eventRegistration = registerToItemsChangedEvent(observableCollection);
+            observableCollection.removeAtIndices([1, 2]);
+            observableCollection.removeAtIndices([1, 2]);
+            var expectedEvents = [
+                {
+                    added: [],
+                    removed: [itemAddedMultipleTimes, items[2]]
                 },
                 {
                     added: [],
@@ -217,8 +442,31 @@ describe('ObservableCollection', function () {
             observableCollection.clear();
             verifyCollectionHasItems(observableCollection, []);
         });
+        it('clearing collection with items appearing multiple times should clear it', function () {
+            var items = createItems(5);
+            var itemAddedMultipleTimes = items[2];
+            items.push(itemAddedMultipleTimes);
+            observableCollection.addRange(items);
+            observableCollection.clear();
+            verifyCollectionHasItems(observableCollection, []);
+        });
         it('clearing collection with items should raise events correctly', function () {
             var items = createItems(5);
+            observableCollection.addRange(items);
+            var eventRegistration = registerToItemsChangedEvent(observableCollection);
+            observableCollection.clear();
+            var expectedEvents = [
+                {
+                    added: [],
+                    removed: items
+                }
+            ];
+            verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+        });
+        it('clearing collection with items added multiple times should raise events correctly', function () {
+            var items = createItems(5);
+            var itemAddedMultipleTimes = items[2];
+            items.push(itemAddedMultipleTimes);
             observableCollection.addRange(items);
             var eventRegistration = registerToItemsChangedEvent(observableCollection);
             observableCollection.clear();

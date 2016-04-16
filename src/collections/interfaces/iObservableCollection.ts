@@ -9,8 +9,11 @@ export interface IObservableCollection<T> {
   add(item: T): void;
   addRange(items: T[]): void;
 
-  remove(items: T): void;
-  removeRange(items: T[]): void;
+  removeMatching(items: T): void;
+  removeMatchingRange(items: T[]): void;
+
+  removeAtIndex(index: number): void;
+  removeAtIndices(indices: number[]): void;
 
   clear(): void;
 }

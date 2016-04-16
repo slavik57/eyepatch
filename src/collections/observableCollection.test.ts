@@ -166,13 +166,13 @@ describe('ObservableCollection', () => {
     });
   });
 
-  describe('remove', () => {
+  describe('removeMatching', () => {
     it('removing non existing item should not throw error', () => {
       // Arrange
       var item = createItem();
 
       // Act
-      var removeAction = () => observableCollection.remove(item);
+      var removeAction = () => observableCollection.removeMatching(item);
 
       // Assert
       expect(removeAction).to.not.throw();
@@ -186,7 +186,7 @@ describe('ObservableCollection', () => {
         registerToItemsChangedEvent(observableCollection);
 
       // Act
-      observableCollection.remove(item);
+      observableCollection.removeMatching(item);
 
       // Assert
       verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, []);
@@ -202,7 +202,24 @@ describe('ObservableCollection', () => {
       observableCollection.addRange(items);
 
       // Act
-      observableCollection.remove(itemToRemove);
+      observableCollection.removeMatching(itemToRemove);
+
+      // Assert
+      verifyCollectionHasItems(observableCollection, expectedItems);
+    });
+
+    it('removing item added multiple times should remove all', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemAppearingMultipleTimes = items[1];
+      items.push(itemAppearingMultipleTimes);
+
+      var expectedItems = [items[0], items[2], items[3], items[4]];
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.removeMatching(itemAppearingMultipleTimes);
 
       // Assert
       verifyCollectionHasItems(observableCollection, expectedItems);
@@ -221,8 +238,8 @@ describe('ObservableCollection', () => {
         registerToItemsChangedEvent(observableCollection);
 
       // Act
-      observableCollection.remove(itemToRemove1);
-      observableCollection.remove(itemToRemove2);
+      observableCollection.removeMatching(itemToRemove1);
+      observableCollection.removeMatching(itemToRemove2);
 
       // Assert
       var expectedEvents: IItemsChangedEventArgs<any>[] = [
@@ -238,17 +255,49 @@ describe('ObservableCollection', () => {
 
       verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
     });
+
+    it('removing item added multiple times should raise events correctly', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemAppearingMultipleTimes = items[1];
+      items.push(itemAppearingMultipleTimes);
+
+      var itemToRemove2 = items[3];
+
+      observableCollection.addRange(items);
+
+      var eventRegistration =
+        registerToItemsChangedEvent(observableCollection);
+
+      // Act
+      observableCollection.removeMatching(itemAppearingMultipleTimes);
+      observableCollection.removeMatching(itemToRemove2);
+
+      // Assert
+      var expectedEvents: IItemsChangedEventArgs<any>[] = [
+        {
+          added: [],
+          removed: [itemAppearingMultipleTimes, itemAppearingMultipleTimes]
+        },
+        {
+          added: [],
+          removed: [itemToRemove2]
+        }
+      ];
+
+      verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+    });
   });
 
-  describe('removeRange', () => {
+  describe('removeMatchingRange', () => {
     it('removing with null/undefined should throw error', () => {
       // Arrange
       var nullItems = null;
       var undefinedItems = null;
 
       // Act
-      var removeWithNullAction = () => observableCollection.removeRange(nullItems);
-      var removeWithUndefinedAction = () => observableCollection.removeRange(undefinedItems);
+      var removeWithNullAction = () => observableCollection.removeMatchingRange(nullItems);
+      var removeWithUndefinedAction = () => observableCollection.removeMatchingRange(undefinedItems);
 
       // Assert
       expect(removeWithNullAction).to.throw();
@@ -264,8 +313,8 @@ describe('ObservableCollection', () => {
         registerToItemsChangedEvent(observableCollection);
 
       // Act
-      var removeWithNullAction = () => observableCollection.removeRange(nullItems);
-      var removeWithUndefinedAction = () => observableCollection.removeRange(undefinedItems);
+      var removeWithNullAction = () => observableCollection.removeMatchingRange(nullItems);
+      var removeWithUndefinedAction = () => observableCollection.removeMatchingRange(undefinedItems);
 
       // Assert
       expect(removeWithNullAction).to.throw();
@@ -278,7 +327,7 @@ describe('ObservableCollection', () => {
       var items = createItems(3);
 
       // Act
-      var removeAction = () => observableCollection.removeRange(items);
+      var removeAction = () => observableCollection.removeMatchingRange(items);
 
       // Assert
       expect(removeAction).to.not.throw();
@@ -292,7 +341,7 @@ describe('ObservableCollection', () => {
         registerToItemsChangedEvent(observableCollection);
 
       // Act
-      observableCollection.removeRange(items);
+      observableCollection.removeMatchingRange(items);
 
       // Assert
       verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, []);
@@ -308,7 +357,25 @@ describe('ObservableCollection', () => {
       observableCollection.addRange(items);
 
       // Act
-      observableCollection.removeRange(itemsToRemove);
+      observableCollection.removeMatchingRange(itemsToRemove);
+
+      // Assert
+      verifyCollectionHasItems(observableCollection, expectedItems);
+    });
+
+    it('removing items added multiple times should remove them', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemAddedMultipleTimes = items[1];
+      items.push(itemAddedMultipleTimes);
+
+      var itemsToRemove = [items[1], items[3]];
+      var expectedItems = [items[0], items[2], items[4]];
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.removeMatchingRange(itemsToRemove);
 
       // Assert
       verifyCollectionHasItems(observableCollection, expectedItems);
@@ -327,14 +394,328 @@ describe('ObservableCollection', () => {
         registerToItemsChangedEvent(observableCollection);
 
       // Act
-      observableCollection.removeRange(itemsToRemove1);
-      observableCollection.removeRange(itemsToRemove2);
+      observableCollection.removeMatchingRange(itemsToRemove1);
+      observableCollection.removeMatchingRange(itemsToRemove2);
 
       // Assert
       var expectedEvents: IItemsChangedEventArgs<any>[] = [
         {
           added: [],
           removed: itemsToRemove1
+        },
+        {
+          added: [],
+          removed: itemsToRemove2
+        }
+      ];
+
+      verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+    });
+
+    it('removing items added multiple times should raise events correctly', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemAddedMultipleTimes = items[1];
+      items.push(itemAddedMultipleTimes);
+
+      var itemsToRemove1 = [itemAddedMultipleTimes, items[2]];
+      var itemsToRemove2 = [items[3], items[4]];
+
+      observableCollection.addRange(items);
+
+      var eventRegistration =
+        registerToItemsChangedEvent(observableCollection);
+
+      // Act
+      observableCollection.removeMatchingRange(itemsToRemove1);
+      observableCollection.removeMatchingRange(itemsToRemove2);
+
+      // Assert
+      var expectedEvents: IItemsChangedEventArgs<any>[] = [
+        {
+          added: [],
+          removed: [itemAddedMultipleTimes, items[2], itemAddedMultipleTimes]
+        },
+        {
+          added: [],
+          removed: itemsToRemove2
+        }
+      ];
+
+      verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+    });
+  });
+
+  describe('removeAtIndex', () => {
+    it('removing non existing index should not throw error', () => {
+      // Arrange
+      var item = createItem();
+
+      // Act
+      var removeAction = () => observableCollection.removeAtIndex(0);
+
+      // Assert
+      expect(removeAction).to.not.throw();
+    });
+
+    it('removing non existing index should not raise events', () => {
+      // Arrange
+      var item = createItem();
+
+      var eventRegistration =
+        registerToItemsChangedEvent(observableCollection);
+
+      // Act
+      observableCollection.removeAtIndex(123);
+
+      // Assert
+      verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, []);
+    });
+
+    it('should remove item at index', () => {
+      // Arrange
+      var items = createItems(5);
+
+      var itemIndexToRemove = 2;
+      var expectedItems = [items[0], items[1], items[3], items[4]];
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.removeAtIndex(itemIndexToRemove);
+
+      // Assert
+      verifyCollectionHasItems(observableCollection, expectedItems);
+    });
+
+    it('removing index of an item added multiple times should remove only one instance', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemAppearingMultipleTimes = items[1];
+      items.push(itemAppearingMultipleTimes);
+
+      var expectedItems = [items[0], items[2], items[3], items[4], itemAppearingMultipleTimes];
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.removeAtIndex(1);
+
+      // Assert
+      verifyCollectionHasItems(observableCollection, expectedItems);
+    });
+
+    it('should raise events correctly', () => {
+      // Arrange
+      var items = createItems(5);
+
+      var itemToRemove1 = items[1];
+      var itemToRemove2 = items[3];
+
+      observableCollection.addRange(items);
+
+      var eventRegistration =
+        registerToItemsChangedEvent(observableCollection);
+
+      // Act
+      observableCollection.removeAtIndex(1);
+      observableCollection.removeAtIndex(2);
+
+      // Assert
+      var expectedEvents: IItemsChangedEventArgs<any>[] = [
+        {
+          added: [],
+          removed: [itemToRemove1]
+        },
+        {
+          added: [],
+          removed: [itemToRemove2]
+        }
+      ];
+
+      verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+    });
+
+    it('removing index of an item added multiple times should raise events correctly', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemAppearingMultipleTimes = items[1];
+      items.push(itemAppearingMultipleTimes);
+
+      var itemToRemove2 = items[3];
+
+      observableCollection.addRange(items);
+
+      var eventRegistration =
+        registerToItemsChangedEvent(observableCollection);
+
+      // Act
+      observableCollection.removeAtIndex(1);
+      observableCollection.removeAtIndex(2);
+
+      // Assert
+      var expectedEvents: IItemsChangedEventArgs<any>[] = [
+        {
+          added: [],
+          removed: [itemAppearingMultipleTimes]
+        },
+        {
+          added: [],
+          removed: [itemToRemove2]
+        }
+      ];
+
+      verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+    });
+  });
+
+  describe('removeAtIndices', () => {
+    it('removing with null/undefined should throw error', () => {
+      // Arrange
+      var nullIndices = null;
+      var undefinedIndices = null;
+
+      // Act
+      var removeWithNullAction = () => observableCollection.removeAtIndices(nullIndices);
+      var removeWithUndefinedAction = () => observableCollection.removeAtIndices(undefinedIndices);
+
+      // Assert
+      expect(removeWithNullAction).to.throw();
+      expect(removeWithUndefinedAction).to.throw();
+    });
+
+    it('removing with null/undefined should not raise events', () => {
+      // Arrange
+      var nullIndices = null;
+      var undefinedIndices = null;
+
+      var eventRegistration =
+        registerToItemsChangedEvent(observableCollection);
+
+      // Act
+      var removeWithNullAction = () => observableCollection.removeAtIndices(nullIndices);
+      var removeWithUndefinedAction = () => observableCollection.removeAtIndices(undefinedIndices);
+
+      // Assert
+      expect(removeWithNullAction).to.throw();
+      expect(removeWithUndefinedAction).to.throw();
+      verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, []);
+    });
+
+    it('removing non existing indexes should not throw error', () => {
+      // Arrange
+      var indices = [0, 123, 124, 1253];
+
+      // Act
+      var removeAction = () => observableCollection.removeAtIndices(indices);
+
+      // Assert
+      expect(removeAction).to.not.throw();
+    });
+
+    it('removing non existing indices should not raise events', () => {
+      // Arrange
+      var indices = [123, 4613];
+
+      var eventRegistration =
+        registerToItemsChangedEvent(observableCollection);
+
+      // Act
+      observableCollection.removeAtIndices(indices);
+
+      // Assert
+      verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, []);
+    });
+
+    it('removing at existing indices should remove correct items', () => {
+      // Arrange
+      var items = createItems(5);
+
+      var indecesToRemove = [1, 3];
+      var expectedItems = [items[0], items[2], items[4]];
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.removeAtIndices(indecesToRemove);
+
+      // Assert
+      verifyCollectionHasItems(observableCollection, expectedItems);
+    });
+
+    it('removing indices of items added multiple times should remove only at specific places', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemIndex = 1;
+      var itemAddedMultipleTimes = items[itemIndex];
+      items.push(itemAddedMultipleTimes);
+
+      var indicesToRemove = [itemIndex, 3];
+      var expectedItems = [items[0], items[2], items[4], itemAddedMultipleTimes];
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.removeAtIndices(indicesToRemove);
+
+      // Assert
+      verifyCollectionHasItems(observableCollection, expectedItems);
+    });
+
+    it('removing existing indices should raise events correctly', () => {
+      // Arrange
+      var items = createItems(5);
+
+      var itemsToRemove1 = [items[1], items[2]];
+      var itemsToRemove2 = [items[3], items[4]];
+
+      observableCollection.addRange(items);
+
+      var eventRegistration =
+        registerToItemsChangedEvent(observableCollection);
+
+      // Act
+      observableCollection.removeAtIndices([1, 2]);
+      observableCollection.removeAtIndices([1, 2]);
+
+      // Assert
+      var expectedEvents: IItemsChangedEventArgs<any>[] = [
+        {
+          added: [],
+          removed: itemsToRemove1
+        },
+        {
+          added: [],
+          removed: itemsToRemove2
+        }
+      ];
+
+      verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+    });
+
+    it('removing indices of items added multiple times should raise events correctly', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemAddedMultipleTimes = items[1];
+      items.push(itemAddedMultipleTimes);
+
+      var itemsToRemove1 = [itemAddedMultipleTimes, items[2]];
+      var itemsToRemove2 = [items[3], items[4]];
+
+      observableCollection.addRange(items);
+
+      var eventRegistration =
+        registerToItemsChangedEvent(observableCollection);
+
+      // Act
+      observableCollection.removeAtIndices([1, 2]);
+      observableCollection.removeAtIndices([1, 2]);
+
+      // Assert
+      var expectedEvents: IItemsChangedEventArgs<any>[] = [
+        {
+          added: [],
+          removed: [itemAddedMultipleTimes, items[2]]
         },
         {
           added: [],
@@ -380,9 +761,49 @@ describe('ObservableCollection', () => {
       verifyCollectionHasItems(observableCollection, []);
     });
 
+    it('clearing collection with items appearing multiple times should clear it', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemAddedMultipleTimes = items[2];
+      items.push(itemAddedMultipleTimes);
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.clear();
+
+      // Assert
+      verifyCollectionHasItems(observableCollection, []);
+    });
+
     it('clearing collection with items should raise events correctly', () => {
       // Arrange
       var items = createItems(5);
+
+      observableCollection.addRange(items);
+
+      var eventRegistration =
+        registerToItemsChangedEvent(observableCollection);
+
+      // Act
+      observableCollection.clear();
+
+      // Assert
+      var expectedEvents: IItemsChangedEventArgs<any>[] = [
+        {
+          added: [],
+          removed: items
+        }
+      ];
+
+      verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+    });
+
+    it('clearing collection with items added multiple times should raise events correctly', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemAddedMultipleTimes = items[2];
+      items.push(itemAddedMultipleTimes);
 
       observableCollection.addRange(items);
 

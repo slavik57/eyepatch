@@ -27,12 +27,12 @@ var ObservableCollection = (function () {
         this._items.push.apply(this._items, items);
         this._raiseItemsAdded(items);
     };
-    ObservableCollection.prototype.remove = function (item) {
+    ObservableCollection.prototype.removeMatching = function (item) {
         var removedItems = this._items.filter(function (_item) { return _item === item; });
         this._items = this._items.filter(function (_item) { return _item !== item; });
         this._raiseItemsRemoved(removedItems);
     };
-    ObservableCollection.prototype.removeRange = function (items) {
+    ObservableCollection.prototype.removeMatchingRange = function (items) {
         var _this = this;
         if (!items) {
             throw 'removeRange cannot be called with null or undefined';
@@ -40,6 +40,32 @@ var ObservableCollection = (function () {
         var removedItems = this._items.filter(function (_item) { return _this._isItemInsideArray(items, _item); });
         this._items =
             this._items.filter(function (_item) { return !_this._isItemInsideArray(items, _item); });
+        this._raiseItemsRemoved(removedItems);
+    };
+    ObservableCollection.prototype.removeAtIndex = function (index) {
+        if (this._items.length <= index) {
+            return;
+        }
+        var itemToRemove = this._items[index];
+        this._items.splice(index, 1);
+        this._raiseItemsRemoved([itemToRemove]);
+    };
+    ObservableCollection.prototype.removeAtIndices = function (indices) {
+        if (!indices) {
+            throw 'removeAtIndices cannot be called with null or undefined';
+        }
+        var filteredItems = [];
+        var removedItems = [];
+        for (var i = 0; i < this._items.length; i++) {
+            var item = this._items[i];
+            if (this._isItemInsideArray(indices, i)) {
+                removedItems.push(item);
+            }
+            else {
+                filteredItems.push(item);
+            }
+        }
+        this._items = filteredItems;
         this._raiseItemsRemoved(removedItems);
     };
     ObservableCollection.prototype.clear = function () {
