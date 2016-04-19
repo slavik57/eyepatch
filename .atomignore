@@ -7,7 +7,4 @@ src/*/*.js
 src/*/*.d.ts
 src/*.js
 src/*.d.ts
-tests/*.js
-tests/*/*.js
-tests/*.d.ts
-tests/*/*.d.ts
+

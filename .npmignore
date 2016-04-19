@@ -6,3 +6,5 @@ typings.json
 *.ts
 !*.d.ts
 .npmignore
+*.test.js
+*.test.d.ts
