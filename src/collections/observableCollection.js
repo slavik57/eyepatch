@@ -12,6 +12,13 @@ var ObservableCollection = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ObservableCollection.prototype, "size", {
+        get: function () {
+            return this._items.length;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(ObservableCollection.prototype, "itemsChanged", {
         get: function () {
             return this._itemsChangedEvent;

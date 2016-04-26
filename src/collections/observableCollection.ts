@@ -11,6 +11,10 @@ export class ObservableCollection<T> implements IObservableCollection<T> {
     return this._items;
   }
 
+  public get size(): number {
+    return this._items.length;
+  }
+
   public get itemsChanged(): IEventT<IItemsChangedEventArgs<T>> {
     return this._itemsChangedEvent;
   }

@@ -4,6 +4,8 @@ import {IItemsChangedEventArgs} from './iItemsChangedEventArgs';
 export interface IObservableCollection<T> {
   readonly items: T[];
 
+  readonly size: number;
+
   readonly itemsChanged: IEventT<IItemsChangedEventArgs<T>>;
 
   add(item: T): void;
@@ -18,4 +20,5 @@ export interface IObservableCollection<T> {
   clear(): void;
 
   contains(item: T): boolean;
+
 }

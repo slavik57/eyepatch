@@ -76,6 +76,16 @@ describe('ObservableCollection', () => {
     }
   }
 
+  describe('constructor', () => {
+    it('should initialize size correctly', () => {
+      // Act
+      var observableCollection = new ObservableCollection<any>();
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(0);
+    });
+  });
+
   describe('add', () => {
     it('adding items one by one should add them to the items', () => {
       // Arrange
@@ -115,6 +125,19 @@ describe('ObservableCollection', () => {
       ];
 
       verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+    });
+
+    it('adding items one by one should set size correctly', () => {
+      // Arrange
+      var item1 = createItem();
+      var item2 = createItem();
+
+      // Act
+      observableCollection.add(item1);
+      observableCollection.add(item2);
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(2);
     });
   });
 
@@ -163,6 +186,18 @@ describe('ObservableCollection', () => {
 
       // Assert
       verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, []);
+    });
+
+    it('adding range should set size correctly', () => {
+      // Arrange
+      var numberOfItems = 3;
+      var items = createItems(numberOfItems);
+
+      // Act
+      observableCollection.addRange(items);
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(numberOfItems);
     });
   });
 
@@ -286,6 +321,49 @@ describe('ObservableCollection', () => {
       ];
 
       verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+    });
+
+    it('removing non existing item should not change size', () => {
+      // Arrange
+      var item1 = createItem();
+      var item2 = createItem();
+
+      observableCollection.add(item1);
+      // Act
+      observableCollection.removeMatching(item2);
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(1);
+    });
+
+    it('removing added items should set size correctly', () => {
+      // Arrange
+      var items = createItems(5);
+
+      var itemToRemove = items[2];
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.removeMatching(itemToRemove);
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(4);
+    });
+
+    it('removing item added multiple times should set size correctly', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemAppearingMultipleTimes = items[1];
+      items.push(itemAppearingMultipleTimes);
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.removeMatching(itemAppearingMultipleTimes);
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(4);
     });
   });
 
@@ -444,6 +522,52 @@ describe('ObservableCollection', () => {
 
       verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
     });
+
+    it('removing non existing items should set size correctly', () => {
+      // Arrange
+      var items1 = createItems(2);
+      observableCollection.addRange(items1);
+
+      var items2 = createItems(3);
+
+      // Act
+      observableCollection.removeMatchingRange(items2);
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(2);
+    });
+
+    it('removing added items should set size correctly', () => {
+      // Arrange
+      var items = createItems(5);
+
+      var itemsToRemove = [items[1], items[3]];
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.removeMatchingRange(itemsToRemove);
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(3);
+    });
+
+    it('removing items added multiple times should set size correctly', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemAddedMultipleTimes = items[1];
+      items.push(itemAddedMultipleTimes);
+
+      var itemsToRemove = [items[1], items[3]];
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.removeMatchingRange(itemsToRemove);
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(3);
+    });
   });
 
   describe('removeAtIndex', () => {
@@ -566,6 +690,48 @@ describe('ObservableCollection', () => {
       ];
 
       verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+    });
+
+    it('removing non existing index should set size correctly', () => {
+      // Arrange
+      var item1 = createItem();
+      observableCollection.add(item1);
+
+      // Act
+      observableCollection.removeAtIndex(10);
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(1);
+    });
+
+    it('remove item at index should set size correctly', () => {
+      // Arrange
+      var items = createItems(5);
+
+      var itemIndexToRemove = 2;
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.removeAtIndex(itemIndexToRemove);
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(4);
+    });
+
+    it('removing index of an item added multiple times should set size correctly', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemAppearingMultipleTimes = items[1];
+      items.push(itemAppearingMultipleTimes);
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.removeAtIndex(1);
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(5);
     });
   });
 
@@ -725,6 +891,52 @@ describe('ObservableCollection', () => {
 
       verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
     });
+
+    it('removing non existing indexes should set size correctly', () => {
+      // Arrange
+      var indices = [10, 123, 124, 1253];
+
+      observableCollection.add(createItem());
+
+      // Act
+      observableCollection.removeAtIndices(indices);
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(1);
+    });
+
+    it('removing at existing indices should set size correctly', () => {
+      // Arrange
+      var items = createItems(5);
+
+      var indecesToRemove = [1, 3];
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.removeAtIndices(indecesToRemove);
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(3);
+    });
+
+    it('removing indices of items added multiple times should remove only at specific places', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemIndex = 1;
+      var itemAddedMultipleTimes = items[itemIndex];
+      items.push(itemAddedMultipleTimes);
+
+      var indicesToRemove = [itemIndex, 3];
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.removeAtIndices(indicesToRemove);
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(4);
+    });
   });
 
   describe('clear', () => {
@@ -822,6 +1034,42 @@ describe('ObservableCollection', () => {
       ];
 
       verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+    });
+
+    it('calling clear on emtpy collection should set size correctly', () => {
+      // Act
+      observableCollection.clear();
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(0);
+    });
+
+    it('clearing collection with items should set size correctly', () => {
+      // Arrange
+      var items = createItems(5);
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.clear();
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(0);
+    });
+
+    it('clearing collection with items appearing multiple times should set size correctly', () => {
+      // Arrange
+      var items = createItems(5);
+      var itemAddedMultipleTimes = items[2];
+      items.push(itemAddedMultipleTimes);
+
+      observableCollection.addRange(items);
+
+      // Act
+      observableCollection.clear();
+
+      // Assert
+      expect(observableCollection.size).to.be.equal(0);
     });
   });
 

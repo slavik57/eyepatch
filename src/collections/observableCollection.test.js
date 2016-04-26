@@ -49,6 +49,12 @@ describe('ObservableCollection', function () {
             verifyArraysAreWithSameItems(exepctedEventArgs.removed, actualEventArgs.removed);
         }
     }
+    describe('constructor', function () {
+        it('should initialize size correctly', function () {
+            var observableCollection = new observableCollection_1.ObservableCollection();
+            chai_1.expect(observableCollection.size).to.be.equal(0);
+        });
+    });
     describe('add', function () {
         it('adding items one by one should add them to the items', function () {
             var item1 = createItem();
@@ -75,6 +81,13 @@ describe('ObservableCollection', function () {
             ];
             verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
         });
+        it('adding items one by one should set size correctly', function () {
+            var item1 = createItem();
+            var item2 = createItem();
+            observableCollection.add(item1);
+            observableCollection.add(item2);
+            chai_1.expect(observableCollection.size).to.be.equal(2);
+        });
     });
     describe('addRange', function () {
         it('adding range should add the items to the items', function () {
@@ -99,6 +112,12 @@ describe('ObservableCollection', function () {
             var eventRegistration = registerToItemsChangedEvent(observableCollection);
             observableCollection.addRange(items);
             verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, []);
+        });
+        it('adding range should set size correctly', function () {
+            var numberOfItems = 3;
+            var items = createItems(numberOfItems);
+            observableCollection.addRange(items);
+            chai_1.expect(observableCollection.size).to.be.equal(numberOfItems);
         });
     });
     describe('removeMatching', function () {
@@ -170,6 +189,28 @@ describe('ObservableCollection', function () {
                 }
             ];
             verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+        });
+        it('removing non existing item should not change size', function () {
+            var item1 = createItem();
+            var item2 = createItem();
+            observableCollection.add(item1);
+            observableCollection.removeMatching(item2);
+            chai_1.expect(observableCollection.size).to.be.equal(1);
+        });
+        it('removing added items should set size correctly', function () {
+            var items = createItems(5);
+            var itemToRemove = items[2];
+            observableCollection.addRange(items);
+            observableCollection.removeMatching(itemToRemove);
+            chai_1.expect(observableCollection.size).to.be.equal(4);
+        });
+        it('removing item added multiple times should set size correctly', function () {
+            var items = createItems(5);
+            var itemAppearingMultipleTimes = items[1];
+            items.push(itemAppearingMultipleTimes);
+            observableCollection.addRange(items);
+            observableCollection.removeMatching(itemAppearingMultipleTimes);
+            chai_1.expect(observableCollection.size).to.be.equal(4);
         });
     });
     describe('removeMatchingRange', function () {
@@ -262,6 +303,29 @@ describe('ObservableCollection', function () {
             ];
             verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
         });
+        it('removing non existing items should set size correctly', function () {
+            var items1 = createItems(2);
+            observableCollection.addRange(items1);
+            var items2 = createItems(3);
+            observableCollection.removeMatchingRange(items2);
+            chai_1.expect(observableCollection.size).to.be.equal(2);
+        });
+        it('removing added items should set size correctly', function () {
+            var items = createItems(5);
+            var itemsToRemove = [items[1], items[3]];
+            observableCollection.addRange(items);
+            observableCollection.removeMatchingRange(itemsToRemove);
+            chai_1.expect(observableCollection.size).to.be.equal(3);
+        });
+        it('removing items added multiple times should set size correctly', function () {
+            var items = createItems(5);
+            var itemAddedMultipleTimes = items[1];
+            items.push(itemAddedMultipleTimes);
+            var itemsToRemove = [items[1], items[3]];
+            observableCollection.addRange(items);
+            observableCollection.removeMatchingRange(itemsToRemove);
+            chai_1.expect(observableCollection.size).to.be.equal(3);
+        });
     });
     describe('removeAtIndex', function () {
         it('removing non existing index should not throw error', function () {
@@ -332,6 +396,27 @@ describe('ObservableCollection', function () {
                 }
             ];
             verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+        });
+        it('removing non existing index should set size correctly', function () {
+            var item1 = createItem();
+            observableCollection.add(item1);
+            observableCollection.removeAtIndex(10);
+            chai_1.expect(observableCollection.size).to.be.equal(1);
+        });
+        it('remove item at index should set size correctly', function () {
+            var items = createItems(5);
+            var itemIndexToRemove = 2;
+            observableCollection.addRange(items);
+            observableCollection.removeAtIndex(itemIndexToRemove);
+            chai_1.expect(observableCollection.size).to.be.equal(4);
+        });
+        it('removing index of an item added multiple times should set size correctly', function () {
+            var items = createItems(5);
+            var itemAppearingMultipleTimes = items[1];
+            items.push(itemAppearingMultipleTimes);
+            observableCollection.addRange(items);
+            observableCollection.removeAtIndex(1);
+            chai_1.expect(observableCollection.size).to.be.equal(5);
         });
     });
     describe('removeAtIndices', function () {
@@ -425,6 +510,29 @@ describe('ObservableCollection', function () {
             ];
             verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
         });
+        it('removing non existing indexes should set size correctly', function () {
+            var indices = [10, 123, 124, 1253];
+            observableCollection.add(createItem());
+            observableCollection.removeAtIndices(indices);
+            chai_1.expect(observableCollection.size).to.be.equal(1);
+        });
+        it('removing at existing indices should set size correctly', function () {
+            var items = createItems(5);
+            var indecesToRemove = [1, 3];
+            observableCollection.addRange(items);
+            observableCollection.removeAtIndices(indecesToRemove);
+            chai_1.expect(observableCollection.size).to.be.equal(3);
+        });
+        it('removing indices of items added multiple times should remove only at specific places', function () {
+            var items = createItems(5);
+            var itemIndex = 1;
+            var itemAddedMultipleTimes = items[itemIndex];
+            items.push(itemAddedMultipleTimes);
+            var indicesToRemove = [itemIndex, 3];
+            observableCollection.addRange(items);
+            observableCollection.removeAtIndices(indicesToRemove);
+            chai_1.expect(observableCollection.size).to.be.equal(4);
+        });
     });
     describe('clear', function () {
         it('calling clear on emtpy collection should not throw error', function () {
@@ -477,6 +585,24 @@ describe('ObservableCollection', function () {
                 }
             ];
             verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
+        });
+        it('calling clear on emtpy collection should set size correctly', function () {
+            observableCollection.clear();
+            chai_1.expect(observableCollection.size).to.be.equal(0);
+        });
+        it('clearing collection with items should set size correctly', function () {
+            var items = createItems(5);
+            observableCollection.addRange(items);
+            observableCollection.clear();
+            chai_1.expect(observableCollection.size).to.be.equal(0);
+        });
+        it('clearing collection with items appearing multiple times should set size correctly', function () {
+            var items = createItems(5);
+            var itemAddedMultipleTimes = items[2];
+            items.push(itemAddedMultipleTimes);
+            observableCollection.addRange(items);
+            observableCollection.clear();
+            chai_1.expect(observableCollection.size).to.be.equal(0);
         });
     });
     describe('contains', function () {

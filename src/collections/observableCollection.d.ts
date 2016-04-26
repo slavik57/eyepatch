@@ -5,6 +5,7 @@ export declare class ObservableCollection<T> implements IObservableCollection<T>
     private _items;
     private _itemsChangedEvent;
     readonly items: T[];
+    readonly size: number;
     readonly itemsChanged: IEventT<IItemsChangedEventArgs<T>>;
     add(item: T): void;
     addRange(items: T[]): void;

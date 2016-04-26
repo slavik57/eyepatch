@@ -2,6 +2,7 @@ import { IEventT } from '../../events/interfaces/iEvent';
 import { IItemsChangedEventArgs } from './iItemsChangedEventArgs';
 export interface IObservableCollection<T> {
     readonly items: T[];
+    readonly size: number;
     readonly itemsChanged: IEventT<IItemsChangedEventArgs<T>>;
     add(item: T): void;
     addRange(items: T[]): void;
