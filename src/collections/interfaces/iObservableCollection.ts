@@ -16,4 +16,6 @@ export interface IObservableCollection<T> {
   removeAtIndices(indices: number[]): void;
 
   clear(): void;
+
+  contains(item: T): boolean;
 }

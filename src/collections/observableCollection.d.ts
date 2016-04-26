@@ -13,6 +13,7 @@ export declare class ObservableCollection<T> implements IObservableCollection<T>
     removeAtIndex(index: number): void;
     removeAtIndices(indices: number[]): void;
     clear(): void;
+    contains(item: T): boolean;
     private _isItemInsideArray<U>(arrayToCheckIn, item);
     private _raiseItemsAdded(items);
     private _raiseItemsRemoved(items);

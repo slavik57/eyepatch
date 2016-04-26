@@ -73,6 +73,9 @@ var ObservableCollection = (function () {
         this._items = [];
         this._raiseItemsRemoved(removedItems);
     };
+    ObservableCollection.prototype.contains = function (item) {
+        return this._items.indexOf(item) >= 0;
+    };
     ObservableCollection.prototype._isItemInsideArray = function (arrayToCheckIn, item) {
         return arrayToCheckIn.indexOf(item) >= 0;
     };

@@ -479,4 +479,26 @@ describe('ObservableCollection', function () {
             verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
         });
     });
+    describe('contains', function () {
+        it('empty collection, should return false', function () {
+            var item = {};
+            var result = observableCollection.contains(item);
+            chai_1.expect(result).to.be.false;
+        });
+        it('no such item, should return false', function () {
+            var items = createItems(5);
+            observableCollection.addRange(items);
+            var item = {};
+            var result = observableCollection.contains(item);
+            chai_1.expect(result).to.be.false;
+        });
+        it('item inside the collection, should return true', function () {
+            var item = {};
+            var items = createItems(5);
+            items.push(item);
+            observableCollection.addRange(items);
+            var result = observableCollection.contains(item);
+            chai_1.expect(result).to.be.true;
+        });
+    });
 });
