@@ -1,3 +1,4 @@
+.atomignore
 node_modules
 tests
 typings
