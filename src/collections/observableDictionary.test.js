@@ -558,5 +558,128 @@ describe('ObservableDictionary', function () {
             observableDictionary.clear();
             verifyItemsChangedWasRaisedCorrectly(actualArgs, expectedArgs);
         });
+        it('should not contain the previosley existing keys', function () {
+            var numberOfPairs = 4;
+            var keyValuePairs = createKeyValuePairs(numberOfPairs);
+            for (var i = 0; i < numberOfPairs; i++) {
+                var pair = keyValuePairs[i];
+                observableDictionary.add(pair.key, pair.value);
+            }
+            observableDictionary.clear();
+            for (var i = 0; i < numberOfPairs; i++) {
+                var pair = keyValuePairs[i];
+                chai_1.expect(observableDictionary.containsKey(pair.key)).to.be.false;
+            }
+        });
+        it('should not contain the previosley existing values', function () {
+            var numberOfPairs = 4;
+            var keyValuePairs = createKeyValuePairs(numberOfPairs);
+            for (var i = 0; i < numberOfPairs; i++) {
+                var pair = keyValuePairs[i];
+                observableDictionary.add(pair.key, pair.value);
+            }
+            observableDictionary.clear();
+            for (var i = 0; i < numberOfPairs; i++) {
+                var pair = keyValuePairs[i];
+                chai_1.expect(observableDictionary.containsValue(pair.value)).to.be.false;
+            }
+        });
+    });
+    describe('multiple dictionaries', function () {
+        it('adding to multiple dictionaries should contain the keys and values in all', function () {
+            var key1 = {};
+            var key2 = {};
+            var value1 = {};
+            var value2 = {};
+            var observableDictionary1 = new observableDictionary_1.ObservableDictionary();
+            var observableDictionary2 = new observableDictionary_1.ObservableDictionary();
+            var observableDictionary3 = new observableDictionary_1.ObservableDictionary();
+            observableDictionary1.add(key1, value1);
+            observableDictionary2.add(key1, value1);
+            observableDictionary3.add(key1, value1);
+            observableDictionary1.add(key2, value2);
+            observableDictionary2.add(key2, value2);
+            observableDictionary3.add(key2, value2);
+            chai_1.expect(observableDictionary1.size).to.be.equal(2);
+            chai_1.expect(observableDictionary2.size).to.be.equal(2);
+            chai_1.expect(observableDictionary3.size).to.be.equal(2);
+            chai_1.expect(observableDictionary1.keys).to.contain(key1);
+            chai_1.expect(observableDictionary1.keys).to.contain(key2);
+            chai_1.expect(observableDictionary2.keys).to.contain(key1);
+            chai_1.expect(observableDictionary2.keys).to.contain(key2);
+            chai_1.expect(observableDictionary3.keys).to.contain(key1);
+            chai_1.expect(observableDictionary3.keys).to.contain(key2);
+            chai_1.expect(observableDictionary1.values).to.contain(value1);
+            chai_1.expect(observableDictionary1.values).to.contain(value2);
+            chai_1.expect(observableDictionary2.values).to.contain(value1);
+            chai_1.expect(observableDictionary2.values).to.contain(value2);
+            chai_1.expect(observableDictionary3.values).to.contain(value1);
+            chai_1.expect(observableDictionary3.values).to.contain(value2);
+            chai_1.expect(observableDictionary1.getValueByKey(key1)).to.be.equal(value1);
+            chai_1.expect(observableDictionary2.getValueByKey(key1)).to.be.equal(value1);
+            chai_1.expect(observableDictionary3.getValueByKey(key1)).to.be.equal(value1);
+            chai_1.expect(observableDictionary1.getValueByKey(key2)).to.be.equal(value2);
+            chai_1.expect(observableDictionary2.getValueByKey(key2)).to.be.equal(value2);
+            chai_1.expect(observableDictionary3.getValueByKey(key2)).to.be.equal(value2);
+            chai_1.expect(observableDictionary1.containsKey(key1)).to.be.true;
+            chai_1.expect(observableDictionary1.containsKey(key2)).to.be.true;
+            chai_1.expect(observableDictionary2.containsKey(key1)).to.be.true;
+            chai_1.expect(observableDictionary2.containsKey(key2)).to.be.true;
+            chai_1.expect(observableDictionary3.containsKey(key1)).to.be.true;
+            chai_1.expect(observableDictionary3.containsKey(key2)).to.be.true;
+            chai_1.expect(observableDictionary1.containsValue(value1)).to.be.true;
+            chai_1.expect(observableDictionary1.containsValue(value2)).to.be.true;
+            chai_1.expect(observableDictionary2.containsValue(value1)).to.be.true;
+            chai_1.expect(observableDictionary2.containsValue(value2)).to.be.true;
+            chai_1.expect(observableDictionary3.containsValue(value1)).to.be.true;
+            chai_1.expect(observableDictionary3.containsValue(value2)).to.be.true;
+        });
+        it('add to multiple dictionaries, remove key from one, clear the other, should act properly', function () {
+            var key1 = { a: 1 };
+            var key2 = { b: 2 };
+            var value1 = { c: 3 };
+            var value2 = { d: 4 };
+            var observableDictionary1 = new observableDictionary_1.ObservableDictionary();
+            var observableDictionary2 = new observableDictionary_1.ObservableDictionary();
+            var observableDictionary3 = new observableDictionary_1.ObservableDictionary();
+            observableDictionary1.add(key1, value1);
+            observableDictionary2.add(key1, value1);
+            observableDictionary3.add(key1, value1);
+            observableDictionary1.add(key2, value2);
+            observableDictionary2.add(key2, value2);
+            observableDictionary3.add(key2, value2);
+            observableDictionary2.remove(key2);
+            observableDictionary1.clear();
+            chai_1.expect(observableDictionary1.size, 'size should be correct').to.be.equal(0);
+            chai_1.expect(observableDictionary2.size, 'size should be correct').to.be.equal(1);
+            chai_1.expect(observableDictionary3.size, 'size should be correct').to.be.equal(2);
+            chai_1.expect(observableDictionary1.keys, 'keys should be correct').not.to.contain(key1);
+            chai_1.expect(observableDictionary1.keys, 'keys should be correct').not.to.contain(key2);
+            chai_1.expect(observableDictionary2.keys, 'keys should be correct').to.contain(key1);
+            chai_1.expect(observableDictionary2.keys, 'keys should be correct').not.to.contain(key2);
+            chai_1.expect(observableDictionary3.keys, 'keys should be correct').to.contain(key1);
+            chai_1.expect(observableDictionary3.keys, 'keys should be correct').to.contain(key2);
+            chai_1.expect(observableDictionary1.values, 'values should be correct').not.to.contain(value1);
+            chai_1.expect(observableDictionary1.values, 'values should be correct').not.to.contain(value2);
+            chai_1.expect(observableDictionary2.values, 'values should be correct').to.contain(value1);
+            chai_1.expect(observableDictionary2.values, 'values should be correct').not.to.contain(value2);
+            chai_1.expect(observableDictionary3.values, 'values should be correct').to.contain(value1);
+            chai_1.expect(observableDictionary3.values, 'values should be correct').to.contain(value2);
+            chai_1.expect(observableDictionary2.getValueByKey(key1), 'getValueByKey should return correct value').to.be.equal(value1);
+            chai_1.expect(observableDictionary3.getValueByKey(key1), 'getValueByKey should return correct value').to.be.equal(value1);
+            chai_1.expect(observableDictionary3.getValueByKey(key2), 'getValueByKey should return correct value').to.be.equal(value2);
+            chai_1.expect(observableDictionary1.containsKey(key1), 'dictionary1 contains key1 should work ok').to.be.false;
+            chai_1.expect(observableDictionary1.containsKey(key2), 'dictionary1 contains key2 should work ok').to.be.false;
+            chai_1.expect(observableDictionary2.containsKey(key1), 'dictionary2 contains key1 should work ok').to.be.true;
+            chai_1.expect(observableDictionary2.containsKey(key2), 'dictionary2 contains key2 should work ok').to.be.false;
+            chai_1.expect(observableDictionary3.containsKey(key1), 'dictionary3 contains key1 should work ok').to.be.true;
+            chai_1.expect(observableDictionary3.containsKey(key2), 'dictionary3 contains key2 should work ok').to.be.true;
+            chai_1.expect(observableDictionary1.containsValue(value1), 'contains value should work ok').to.be.false;
+            chai_1.expect(observableDictionary1.containsValue(value2), 'contains value should work ok').to.be.false;
+            chai_1.expect(observableDictionary2.containsValue(value1), 'contains value should work ok').to.be.true;
+            chai_1.expect(observableDictionary2.containsValue(value2), 'contains value should work ok').to.be.false;
+            chai_1.expect(observableDictionary3.containsValue(value1), 'contains value should work ok').to.be.true;
+            chai_1.expect(observableDictionary3.containsValue(value2), 'contains value should work ok').to.be.true;
+        });
     });
 });

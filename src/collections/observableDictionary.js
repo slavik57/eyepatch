@@ -88,6 +88,10 @@ var ObservableDictionary = (function () {
     };
     ObservableDictionary.prototype.clear = function () {
         var removedPairs = this._getAllKeyValuePairs();
+        for (var i = 0; i < removedPairs.length; i++) {
+            var key = removedPairs[i].key;
+            this._removeIdFromKey(key);
+        }
         this._resetDictionary();
         this._raiseItemsChanged([], removedPairs);
     };

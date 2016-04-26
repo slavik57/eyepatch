@@ -19,5 +19,4 @@ export interface IObservableDictionary<TKey, TValue> {
   getValueByKey(key: TKey): TValue;
 
   clear(): void;
-
 }

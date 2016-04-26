@@ -116,6 +116,12 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
     var removedPairs: IKeyValue<TKey, TValue>[] =
       this._getAllKeyValuePairs();
 
+    for (var i = 0; i < removedPairs.length; i++) {
+      var key: TKey = removedPairs[i].key;
+
+      this._removeIdFromKey(key);
+    }
+
     this._resetDictionary();
 
     this._raiseItemsChanged([], removedPairs);
