@@ -16,6 +16,7 @@ Just me myself and I, in my free time
 - Events - Simple or parametrized.
 - ConditionalEvent - Simple or parametrized.
 - ObservableCollection - notifies you when something changes.
+- ObservableDictionary - Works with keys as an object and not only strings and numbers. Notifies on changes. Works simply adding non enumerable property as the key id. This doesn't affect the JSON.stringify method nor the ```for in``` loop.
 
 ## Languages
 The library is written in TypeScript but you can use in both in TypeScript and JavaScript
@@ -58,6 +59,8 @@ event.raiseSafe();
 ```Typescript
 var collection = new ObservableCollection<number>();
 
+var items:number[] = collection.items;
+
 collection.itemsChanged.on(
   (_args: IItemsChangedEventArgs<number>) => {
     console.log('Added items: ' + _args.added);
@@ -77,6 +80,35 @@ var size: number = collection.size;
 var has7: boolean = collection.contains(7);
 
 collection.clear();
+```
+
+###### Using ObservableDictionary
+```Typescript
+var dictionary = new ObservableDictionary<Obejct, Object>();
+
+dictionary.itemsChanged.on(
+  _args => {
+    console.log('Added key value pairs: ' + _args.added);
+    console.log('Removed key value pairs: ' + _args.removed);
+  });
+
+var key = {};
+var value = {};
+dictionary.add(key, value);
+
+var containsKey: boolean = dictionary.containsKey(key);
+var containsValue: boolean = dictionary.containsValue(value);
+
+var valueByKey: Object = dictionary.getValueByKey(key);
+
+var size: number = dictionary.size;
+
+var keys: Object[] = dictionary.keys;
+var values: Object[] = dictionary.values;
+
+dictionary.remove(key);
+
+dictionary.clear();
 ```
 
 ## Whats next?
