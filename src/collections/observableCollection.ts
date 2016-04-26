@@ -90,6 +90,10 @@ export class ObservableCollection<T> implements IObservableCollection<T> {
     this._raiseItemsRemoved(removedItems);
   }
 
+  public contains(item: T): boolean {
+    return this._items.indexOf(item) >= 0;
+  }
+
   private _isItemInsideArray<U>(arrayToCheckIn: U[], item: U): boolean {
     return arrayToCheckIn.indexOf(item) >= 0;
   }

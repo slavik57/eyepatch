@@ -824,4 +824,46 @@ describe('ObservableCollection', () => {
       verifyItemsChangedEventsWereRaisedCorrectly(eventRegistration, expectedEvents);
     });
   });
+
+  describe('contains', () => {
+    it('empty collection, should return false', () => {
+      // Arrange
+      var item = {};
+
+      // Act
+      var result = observableCollection.contains(item);
+
+      // Assert
+      expect(result).to.be.false;
+    });
+
+    it('no such item, should return false', () => {
+      // Arrange
+      var items = createItems(5);
+      observableCollection.addRange(items);
+
+      var item = {};
+
+      // Act
+      var result = observableCollection.contains(item);
+
+      // Assert
+      expect(result).to.be.false;
+    });
+
+    it('item inside the collection, should return true', () => {
+      // Arrange
+      var item = {};
+      var items = createItems(5);
+      items.push(item);
+
+      observableCollection.addRange(items);
+
+      // Act
+      var result = observableCollection.contains(item);
+
+      // Assert
+      expect(result).to.be.true;
+    });
+  });
 });
