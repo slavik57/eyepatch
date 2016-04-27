@@ -3,7 +3,7 @@ A library of notification based objects
 
 ## Installation
 ```
-npm install eyepatch
+npm install eyepatch --save
 ```
 
 ## Why?
