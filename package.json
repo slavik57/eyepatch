@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -c -b src/**/*.test.js"
+    "test": "./node_modules/.bin/mocha -c -b src/**/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/slavik57/eyepatch#readme",
   "devDependencies": {
     "chai": "^3.5.0",
+    "mocha": "^2.5.3",
     "sinon": "^1.17.3"
   }
 }
