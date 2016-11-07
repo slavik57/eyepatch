@@ -15,6 +15,7 @@ Just me myself and I, in my free time
 ## Features
 - Events - Simple or parametrized.
 - ConditionalEvent - Simple or parametrized.
+- GlobalEvent - To broadcast events globally
 - ObservableCollection - notifies you when something changes.
 - ObservableDictionary - Works with keys as an object and not only strings and numbers. Notifies on changes. Works simply adding non enumerable property as the key id. This doesn't affect the JSON.stringify method nor the ```for in``` loop.
 
@@ -43,6 +44,17 @@ conditionalEvent.on(
 
 conditionalEvent.raise(-1); // Will not be logged
 conditionalEvent.raise(12); // Will be logged
+```
+
+###### Using global event
+```Typescript
+const globalEvent1 = new GlobalEvent();
+
+globalEvent1.on('some event name', (_num: number) => console.log('The number ' + _num + ' was raised'));
+
+// In some other place
+const globalEvent2 = new GlobalEvent();
+globalEvent2.raise('some event name', 123); // Will log: "The number 123 was raised"
 ```
 
 ###### Raising safely in case one of the registrations throws an error

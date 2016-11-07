@@ -7,5 +7,7 @@ var event_1 = require('./src/events/event');
 exports.Event = event_1.Event;
 var eventT_1 = require('./src/events/eventT');
 exports.EventT = eventT_1.EventT;
+var globalEvent_1 = require('./src/events/globalEvent');
+exports.GlobalEvent = globalEvent_1.GlobalEvent;
 var observableCollection_1 = require('./src/collections/observableCollection');
 exports.ObservableCollection = observableCollection_1.ObservableCollection;
