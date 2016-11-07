@@ -4,10 +4,12 @@ export { IConditionalRaisableEvent, IConditionalRaisableEventT } from './src/eve
 export { IEvent, IEventT } from './src/events/interfaces/iEvent';
 export { IEventHandler, IEventHandlerT } from './src/events/interfaces/iEventHandler';
 export { IRaisableEvent, IRaisableEventT } from './src/events/interfaces/iRaisableEvent';
+export { IGlobalEvent } from './src/events/interfaces/IGlobalEvent';
 export { ConditionalEvent } from './src/events/conditionalEvent';
 export { ConditionalEventT } from './src/events/conditionalEventT';
 export { Event } from './src/events/event';
 export { EventT } from './src/events/eventT';
+export { GlobalEvent } from './src/events/globalEvent';
 export { IItemsChangedEventArgs } from './src/collections/interfaces/iItemsChangedEventArgs';
 export { IObservableCollection } from './src/collections/interfaces/iObservableCollection';
 export { ObservableCollection } from './src/collections/observableCollection';
