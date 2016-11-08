@@ -7,7 +7,7 @@ var GlobalEvent = (function () {
         var event = this.getEvent(eventName);
         if (!event) {
             event = new eventT_1.EventT();
-            GlobalEvent.globalEventsMap[eventName] = event;
+            GlobalEvent._globalEventsMap[eventName] = event;
         }
         event.on(eventHandler);
     };
@@ -19,7 +19,7 @@ var GlobalEvent = (function () {
     };
     GlobalEvent.prototype.clearAllSubscribtions = function (eventName) {
         if (!!this.getEvent(eventName)) {
-            delete GlobalEvent.globalEventsMap[eventName];
+            delete GlobalEvent._globalEventsMap[eventName];
         }
     };
     GlobalEvent.prototype.raise = function (eventName, data) {
@@ -35,9 +35,9 @@ var GlobalEvent = (function () {
         }
     };
     GlobalEvent.prototype.getEvent = function (eventName) {
-        return GlobalEvent.globalEventsMap[eventName];
+        return GlobalEvent._globalEventsMap[eventName];
     };
-    GlobalEvent.globalEventsMap = {};
+    GlobalEvent._globalEventsMap = {};
     return GlobalEvent;
 }());
 exports.GlobalEvent = GlobalEvent;

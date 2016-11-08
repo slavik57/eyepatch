@@ -1,10 +1,7 @@
 import { IGlobalEvent } from "./interfaces/iGlobalEvent";
-import { IRaisableEventT } from "./interfaces/iRaisableEvent";
 import { IEventHandlerT } from "./interfaces/iEventHandler";
 export declare class GlobalEvent implements IGlobalEvent {
-    static globalEventsMap: {
-        [key: string]: IRaisableEventT<any>;
-    };
+    private static _globalEventsMap;
     on(eventName: string, eventHandler: IEventHandlerT<any>): void;
     off(eventName: string, eventHandler: IEventHandlerT<any>): void;
     clearAllSubscribtions(eventName: string): void;
