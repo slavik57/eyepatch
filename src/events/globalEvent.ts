@@ -4,13 +4,13 @@ import {IRaisableEventT} from "./interfaces/iRaisableEvent";
 import {IEventHandlerT} from "./interfaces/iEventHandler";
 
 export class GlobalEvent implements IGlobalEvent {
-  public static globalEventsMap: { [key: string]: IRaisableEventT<any> } = {};
+  private static _globalEventsMap: { [key: string]: IRaisableEventT<any> } = {};
 
   public on(eventName: string, eventHandler: IEventHandlerT<any>): void {
     let event: IRaisableEventT<any> = this.getEvent(eventName);
     if (!event) {
       event = new EventT<any>();
-      GlobalEvent.globalEventsMap[eventName] = event;
+      GlobalEvent._globalEventsMap[eventName] = event;
     }
 
     event.on(eventHandler);
@@ -25,7 +25,7 @@ export class GlobalEvent implements IGlobalEvent {
 
   public clearAllSubscribtions(eventName: string): void {
     if (!!this.getEvent(eventName)) {
-      delete GlobalEvent.globalEventsMap[eventName];
+      delete GlobalEvent._globalEventsMap[eventName];
     }
   }
 
@@ -44,6 +44,6 @@ export class GlobalEvent implements IGlobalEvent {
   }
 
   private getEvent(eventName): IRaisableEventT<any> {
-    return GlobalEvent.globalEventsMap[eventName];
+    return GlobalEvent._globalEventsMap[eventName];
   }
 }
