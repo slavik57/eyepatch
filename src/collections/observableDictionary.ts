@@ -86,6 +86,18 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
     this._raiseItemsChanged([], [removedPair]);
   }
 
+  public findKey(predicate: (key: TKey) => boolean): TKey {
+    var keys: TKey[] = this.keys;
+
+    for (let i = 0; i < keys.length; i++) {
+      if (predicate(keys[i])) {
+        return keys[i];
+      }
+    }
+
+    return null;
+  }
+
   public containsKey(key: TKey) {
     return this._keyIdPropertyName in key;
   }

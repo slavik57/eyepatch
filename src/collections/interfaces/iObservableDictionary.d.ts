@@ -8,6 +8,7 @@ export interface IObservableDictionary<TKey, TValue> {
     readonly itemsChanged: IEventT<IItemsChangedEventArgs<IKeyValue<TKey, TValue>>>;
     add(key: TKey, value: TValue): void;
     remove(key: TKey): void;
+    findKey(predicate: (key: TKey) => boolean): TKey;
     containsKey(key: TKey): any;
     containsValue(value: TValue): any;
     getValueByKey(key: TKey): TValue;

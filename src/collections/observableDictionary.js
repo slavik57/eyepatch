@@ -67,6 +67,15 @@ var ObservableDictionary = (function () {
         };
         this._raiseItemsChanged([], [removedPair]);
     };
+    ObservableDictionary.prototype.findKey = function (predicate) {
+        var keys = this.keys;
+        for (var i = 0; i < keys.length; i++) {
+            if (predicate(keys[i])) {
+                return keys[i];
+            }
+        }
+        return null;
+    };
     ObservableDictionary.prototype.containsKey = function (key) {
         return this._keyIdPropertyName in key;
     };
