@@ -1,9 +1,9 @@
-import {expect} from 'chai';
-import {IEventT} from '../events/interfaces/iEvent';
-import {IItemsChangedEventArgs} from './interfaces/iItemsChangedEventArgs';
-import {IKeyValue} from './interfaces/iKeyValue';
-import {IObservableDictionary} from './interfaces/iObservableDictionary';
-import {ObservableDictionary} from './observableDictionary';
+import { expect } from 'chai';
+import { IEventT } from '../events/interfaces/iEvent';
+import { IItemsChangedEventArgs } from './interfaces/iItemsChangedEventArgs';
+import { IKeyValue } from './interfaces/iKeyValue';
+import { IObservableDictionary } from './interfaces/iObservableDictionary';
+import { ObservableDictionary } from './observableDictionary';
 
 interface IPropertyWithValue {
   property: any;
@@ -564,6 +564,29 @@ describe('ObservableDictionary', () => {
       // Assert
       verifyItemsChangedWasRaisedCorrectly(actualArgs, expectedArgs);
     });
+
+    it('removing by found key, should remove', () => {
+      // Arrange
+      var key = { someProp: 1 };
+      var value = '1';
+
+      interface ISomeKey {
+        someProp: number;
+      }
+
+      var dictionary = new ObservableDictionary<ISomeKey, string>();
+      dictionary.add(key, value);
+      expect(dictionary.size).to.be.equal(1);
+      expect(dictionary.keys).to.contain(key);
+
+      // Act
+      var key = dictionary.findKey(_ => _.someProp === 1);
+      dictionary.remove(key);
+
+      // Assert
+      expect(dictionary.size).to.be.equal(0);
+      expect(dictionary.keys).to.not.contain(key);
+    });
   });
 
   describe('containsKey', () => {
@@ -749,6 +772,12 @@ describe('ObservableDictionary', () => {
       expect(results[1]).to.be.true;
       expect(results[2]).to.be.false;
       expect(results[3]).to.be.true;
+    });
+
+    it('not existing value, passes the == test, should return false', () => {
+      observableDictionary.add({}, 0);
+
+      expect(observableDictionary.containsValue(false)).to.be.false;
     });
   });
 
@@ -982,6 +1011,91 @@ describe('ObservableDictionary', () => {
 
         expect(observableDictionary.containsValue(pair.value)).to.be.false;
       }
+    });
+  });
+
+  describe('findKey', () => {
+    it('returning false for all, should return null', () => {
+      // Act
+      var result = observableDictionary.findKey(_ => false);
+
+      // Assert
+      expect(result).to.be.null;
+    });
+
+    it('adding key value pair, should return true on the key, should return the key', () => {
+      // Arrange
+      var key = {};
+      var value = {};
+
+      observableDictionary.add(key, value);
+
+      // Act
+      var result = observableDictionary.findKey(_ => _ === key);
+
+      // Assert
+      expect(result).to.be.equal(key);
+    });
+
+    it('adding multiple key value pairs, returns true on second, should contain the second', () => {
+      // Arrange
+      var numberOfPairs = 4;
+      var keyValuePairs = createKeyValuePairs(numberOfPairs);
+
+      for (var i = 0; i < numberOfPairs; i++) {
+        var pair: IKeyValue<Object, Object> = keyValuePairs[i];
+        observableDictionary.add(pair.key, pair.value);
+      }
+
+      // Act
+      var result = observableDictionary.findKey(_ => _ === keyValuePairs[1].key);
+
+      // Assert
+      expect(result).to.be.equal(keyValuePairs[1].key);
+    });
+
+    it('removing key, should not find the key', () => {
+      // Arrange
+      var key = {};
+      var value = {};
+      observableDictionary.add(key, value);
+
+      observableDictionary.remove(key);
+
+      // Act
+      var result = observableDictionary.findKey(_ => _ === key);
+
+      // Assert
+      expect(result).to.be.null;
+    });
+
+    it('removing multiple keys, should not find the keys', () => {
+      // Arrange
+      var numberOfPairs = 4;
+      var keyValuePairs = createKeyValuePairs(numberOfPairs);
+
+      for (var i = 0; i < numberOfPairs; i++) {
+        var pair: IKeyValue<Object, Object> = keyValuePairs[i];
+        observableDictionary.add(pair.key, pair.value);
+      }
+
+      observableDictionary.remove(keyValuePairs[0].key);
+      observableDictionary.remove(keyValuePairs[2].key);
+
+      // Act
+      var results: Object[] = [];
+      for (var i = 0; i < numberOfPairs; i++) {
+        var pair: IKeyValue<Object, Object> = keyValuePairs[i];
+
+        var result = observableDictionary.findKey(_ => _ === pair.key);
+        results.push(result);
+      }
+
+      // Assert
+      expect(results[0]).to.be.null;
+      expect(results[1]).to.be.equal(keyValuePairs[1].key);
+      expect(results[2]).to.be.null;
+      expect(results[3]).to.be.equal(keyValuePairs[3].key);
     });
   });
 

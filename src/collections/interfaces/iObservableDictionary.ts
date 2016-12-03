@@ -1,6 +1,6 @@
-import {IEventT} from '../../events/interfaces/iEvent';
-import {IItemsChangedEventArgs} from './iItemsChangedEventArgs';
-import {IKeyValue} from './iKeyValue';
+import { IEventT } from '../../events/interfaces/iEvent';
+import { IItemsChangedEventArgs } from './iItemsChangedEventArgs';
+import { IKeyValue } from './iKeyValue';
 
 export interface IObservableDictionary<TKey, TValue> {
   readonly keys: TKey[];
@@ -13,6 +13,7 @@ export interface IObservableDictionary<TKey, TValue> {
   add(key: TKey, value: TValue): void;
   remove(key: TKey): void;
 
+  findKey(predicate: (key: TKey) => boolean): TKey;
   containsKey(key: TKey);
   containsValue(value: TValue);
 

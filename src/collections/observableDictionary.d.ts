@@ -18,6 +18,7 @@ export declare class ObservableDictionary<TKey, TValue> implements IObservableDi
     readonly itemsChanged: IEventT<IItemsChangedEventArgs<IKeyValue<TKey, TValue>>>;
     add(key: TKey, value: TValue): void;
     remove(key: TKey): void;
+    findKey(predicate: (key: TKey) => boolean): TKey;
     containsKey(key: TKey): boolean;
     containsValue(value: TValue): boolean;
     getValueByKey(key: TKey): TValue;

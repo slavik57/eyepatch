@@ -1,5 +1,5 @@
 "use strict";
-var eventT_1 = require('../events/eventT');
+var eventT_1 = require("../events/eventT");
 var ObservableDictionary = (function () {
     function ObservableDictionary() {
         this._dictionaryId = this._getNewObservabledDictionaryId();
@@ -67,13 +67,22 @@ var ObservableDictionary = (function () {
         };
         this._raiseItemsChanged([], [removedPair]);
     };
+    ObservableDictionary.prototype.findKey = function (predicate) {
+        var keys = this.keys;
+        for (var i = 0; i < keys.length; i++) {
+            if (predicate(keys[i])) {
+                return keys[i];
+            }
+        }
+        return null;
+    };
     ObservableDictionary.prototype.containsKey = function (key) {
         return this._keyIdPropertyName in key;
     };
     ObservableDictionary.prototype.containsValue = function (value) {
         for (var keyId in this._keyIdsToValuesMap) {
             var existingValue = this._keyIdsToValuesMap[keyId];
-            if (value == existingValue) {
+            if (value === existingValue) {
                 return true;
             }
         }
@@ -188,7 +197,7 @@ var ObservableDictionary = (function () {
         this._keyIdsToValuesMap = {};
         this._size = 0;
     };
-    ObservableDictionary._observableDictionaryId = 0;
     return ObservableDictionary;
 }());
 exports.ObservableDictionary = ObservableDictionary;
+ObservableDictionary._observableDictionaryId = 0;

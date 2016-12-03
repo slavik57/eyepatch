@@ -124,7 +124,7 @@ var values: Object[] = dictionary.values;
 dictionary.remove(key);
 
 // If you don't have the instance you can search it:
-var foundKey = keys.find(_ => _.someProp === 1);
+var foundKey = dictionary.findKey(_ => _.someProp === 1);
 dictionary.containsKey(foundKey);
 dictionary.getValueByKey(foundKey);
 dictionary.remove(foundKey);

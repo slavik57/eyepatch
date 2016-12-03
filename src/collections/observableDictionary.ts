@@ -1,8 +1,8 @@
-import {IEventT} from '../events/interfaces/iEvent';
-import {EventT} from '../events/eventT';
-import {IItemsChangedEventArgs} from './interfaces/iItemsChangedEventArgs';
-import {IKeyValue} from './interfaces/iKeyValue';
-import {IObservableDictionary} from './interfaces/iObservableDictionary';
+import { IEventT } from '../events/interfaces/iEvent';
+import { EventT } from '../events/eventT';
+import { IItemsChangedEventArgs } from './interfaces/iItemsChangedEventArgs';
+import { IKeyValue } from './interfaces/iKeyValue';
+import { IObservableDictionary } from './interfaces/iObservableDictionary';
 
 export class ObservableDictionary<TKey, TValue> implements IObservableDictionary<TKey, TValue> {
   private static _observableDictionaryId = 0;
@@ -86,6 +86,18 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
     this._raiseItemsChanged([], [removedPair]);
   }
 
+  public findKey(predicate: (key: TKey) => boolean): TKey {
+    var keys: TKey[] = this.keys;
+
+    for (let i = 0; i < keys.length; i++) {
+      if (predicate(keys[i])) {
+        return keys[i];
+      }
+    }
+
+    return null;
+  }
+
   public containsKey(key: TKey) {
     return this._keyIdPropertyName in key;
   }
@@ -94,7 +106,7 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
     for (var keyId in this._keyIdsToValuesMap) {
       var existingValue: TValue = this._keyIdsToValuesMap[keyId];
 
-      if (value == existingValue) {
+      if (value === existingValue) {
         return true;
       }
     }

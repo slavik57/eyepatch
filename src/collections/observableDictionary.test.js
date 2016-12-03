@@ -1,6 +1,6 @@
 "use strict";
-var chai_1 = require('chai');
-var observableDictionary_1 = require('./observableDictionary');
+var chai_1 = require("chai");
+var observableDictionary_1 = require("./observableDictionary");
 describe('ObservableDictionary', function () {
     var observableDictionary;
     beforeEach(function () {
@@ -329,6 +329,18 @@ describe('ObservableDictionary', function () {
             observableDictionary.remove(keyValuePairs[2].key);
             verifyItemsChangedWasRaisedCorrectly(actualArgs, expectedArgs);
         });
+        it('removing by found key, should remove', function () {
+            var key = { someProp: 1 };
+            var value = '1';
+            var dictionary = new observableDictionary_1.ObservableDictionary();
+            dictionary.add(key, value);
+            chai_1.expect(dictionary.size).to.be.equal(1);
+            chai_1.expect(dictionary.keys).to.contain(key);
+            var key = dictionary.findKey(function (_) { return _.someProp === 1; });
+            dictionary.remove(key);
+            chai_1.expect(dictionary.size).to.be.equal(0);
+            chai_1.expect(dictionary.keys).to.not.contain(key);
+        });
     });
     describe('containsKey', function () {
         it('non existing key, should return false', function () {
@@ -444,6 +456,10 @@ describe('ObservableDictionary', function () {
             chai_1.expect(results[1]).to.be.true;
             chai_1.expect(results[2]).to.be.false;
             chai_1.expect(results[3]).to.be.true;
+        });
+        it('not existing value, passes the == test, should return false', function () {
+            observableDictionary.add({}, 0);
+            chai_1.expect(observableDictionary.containsValue(false)).to.be.false;
         });
     });
     describe('getValueByKey', function () {
@@ -583,6 +599,57 @@ describe('ObservableDictionary', function () {
                 var pair = keyValuePairs[i];
                 chai_1.expect(observableDictionary.containsValue(pair.value)).to.be.false;
             }
+        });
+    });
+    describe('findKey', function () {
+        it('returning false for all, should return null', function () {
+            var result = observableDictionary.findKey(function (_) { return false; });
+            chai_1.expect(result).to.be.null;
+        });
+        it('adding key value pair, should return true on the key, should return the key', function () {
+            var key = {};
+            var value = {};
+            observableDictionary.add(key, value);
+            var result = observableDictionary.findKey(function (_) { return _ === key; });
+            chai_1.expect(result).to.be.equal(key);
+        });
+        it('adding multiple key value pairs, returns true on second, should contain the second', function () {
+            var numberOfPairs = 4;
+            var keyValuePairs = createKeyValuePairs(numberOfPairs);
+            for (var i = 0; i < numberOfPairs; i++) {
+                var pair = keyValuePairs[i];
+                observableDictionary.add(pair.key, pair.value);
+            }
+            var result = observableDictionary.findKey(function (_) { return _ === keyValuePairs[1].key; });
+            chai_1.expect(result).to.be.equal(keyValuePairs[1].key);
+        });
+        it('removing key, should not find the key', function () {
+            var key = {};
+            var value = {};
+            observableDictionary.add(key, value);
+            observableDictionary.remove(key);
+            var result = observableDictionary.findKey(function (_) { return _ === key; });
+            chai_1.expect(result).to.be.null;
+        });
+        it('removing multiple keys, should not find the keys', function () {
+            var numberOfPairs = 4;
+            var keyValuePairs = createKeyValuePairs(numberOfPairs);
+            for (var i = 0; i < numberOfPairs; i++) {
+                var pair = keyValuePairs[i];
+                observableDictionary.add(pair.key, pair.value);
+            }
+            observableDictionary.remove(keyValuePairs[0].key);
+            observableDictionary.remove(keyValuePairs[2].key);
+            var results = [];
+            for (var i = 0; i < numberOfPairs; i++) {
+                var pair = keyValuePairs[i];
+                var result = observableDictionary.findKey(function (_) { return _ === pair.key; });
+                results.push(result);
+            }
+            chai_1.expect(results[0]).to.be.null;
+            chai_1.expect(results[1]).to.be.equal(keyValuePairs[1].key);
+            chai_1.expect(results[2]).to.be.null;
+            chai_1.expect(results[3]).to.be.equal(keyValuePairs[3].key);
         });
     });
     describe('multiple dictionaries', function () {
