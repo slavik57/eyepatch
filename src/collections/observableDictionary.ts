@@ -1,8 +1,8 @@
-import {IEventT} from '../events/interfaces/iEvent';
-import {EventT} from '../events/eventT';
-import {IItemsChangedEventArgs} from './interfaces/iItemsChangedEventArgs';
-import {IKeyValue} from './interfaces/iKeyValue';
-import {IObservableDictionary} from './interfaces/iObservableDictionary';
+import { IEventT } from '../events/interfaces/iEvent';
+import { EventT } from '../events/eventT';
+import { IItemsChangedEventArgs } from './interfaces/iItemsChangedEventArgs';
+import { IKeyValue } from './interfaces/iKeyValue';
+import { IObservableDictionary } from './interfaces/iObservableDictionary';
 
 export class ObservableDictionary<TKey, TValue> implements IObservableDictionary<TKey, TValue> {
   private static _observableDictionaryId = 0;
