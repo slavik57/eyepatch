@@ -104,7 +104,7 @@ dictionary.itemsChanged.on(
     console.log('Removed key value pairs: ' + _args.removed);
   });
 
-var key = {};
+var key = { someProp: 1 };
 var value = {};
 dictionary.add(key, value);
 
@@ -118,7 +118,12 @@ var size: number = dictionary.size;
 var keys: Object[] = dictionary.keys;
 var values: Object[] = dictionary.values;
 
+// Be aware: remoing can be done only with keys instances that are inside the dictionary
 dictionary.remove(key);
+
+// If you don't have the instance you can search it:
+var keyToRemove = keys.find(_ => _.someProp === 1);
+dictionary.remove(keyToRemove);
 
 dictionary.clear();
 ```
