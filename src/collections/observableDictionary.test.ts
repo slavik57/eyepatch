@@ -1,9 +1,9 @@
-import {expect} from 'chai';
-import {IEventT} from '../events/interfaces/iEvent';
-import {IItemsChangedEventArgs} from './interfaces/iItemsChangedEventArgs';
-import {IKeyValue} from './interfaces/iKeyValue';
-import {IObservableDictionary} from './interfaces/iObservableDictionary';
-import {ObservableDictionary} from './observableDictionary';
+import { expect } from 'chai';
+import { IEventT } from '../events/interfaces/iEvent';
+import { IItemsChangedEventArgs } from './interfaces/iItemsChangedEventArgs';
+import { IKeyValue } from './interfaces/iKeyValue';
+import { IObservableDictionary } from './interfaces/iObservableDictionary';
+import { ObservableDictionary } from './observableDictionary';
 
 interface IPropertyWithValue {
   property: any;
@@ -749,6 +749,12 @@ describe('ObservableDictionary', () => {
       expect(results[1]).to.be.true;
       expect(results[2]).to.be.false;
       expect(results[3]).to.be.true;
+    });
+
+    it('not existing value, passes the == test, should return false', () => {
+      observableDictionary.add({}, 0);
+
+      expect(observableDictionary.containsValue(false)).to.be.false;
     });
   });
 

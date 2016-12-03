@@ -1,6 +1,6 @@
 "use strict";
-var chai_1 = require('chai');
-var observableDictionary_1 = require('./observableDictionary');
+var chai_1 = require("chai");
+var observableDictionary_1 = require("./observableDictionary");
 describe('ObservableDictionary', function () {
     var observableDictionary;
     beforeEach(function () {
@@ -444,6 +444,10 @@ describe('ObservableDictionary', function () {
             chai_1.expect(results[1]).to.be.true;
             chai_1.expect(results[2]).to.be.false;
             chai_1.expect(results[3]).to.be.true;
+        });
+        it('not existing value, passes the == test, should return false', function () {
+            observableDictionary.add({}, 0);
+            chai_1.expect(observableDictionary.containsValue(false)).to.be.false;
         });
     });
     describe('getValueByKey', function () {

@@ -94,7 +94,7 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
     for (var keyId in this._keyIdsToValuesMap) {
       var existingValue: TValue = this._keyIdsToValuesMap[keyId];
 
-      if (value == existingValue) {
+      if (value === existingValue) {
         return true;
       }
     }
