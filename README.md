@@ -108,9 +108,11 @@ var key = { someProp: 1 };
 var value = {};
 dictionary.add(key, value);
 
+// Be aware: containsKey will work only on keys instances that are inside the dictionary
 var containsKey: boolean = dictionary.containsKey(key);
 var containsValue: boolean = dictionary.containsValue(value);
 
+// Be aware: getValueByKey will work only on keys instances that are inside the dictionary
 var valueByKey: Object = dictionary.getValueByKey(key);
 
 var size: number = dictionary.size;
@@ -118,12 +120,14 @@ var size: number = dictionary.size;
 var keys: Object[] = dictionary.keys;
 var values: Object[] = dictionary.values;
 
-// Be aware: remoing can be done only with keys instances that are inside the dictionary
+// Be aware: removing will work only on keys instances that are inside the dictionary
 dictionary.remove(key);
 
 // If you don't have the instance you can search it:
-var keyToRemove = keys.find(_ => _.someProp === 1);
-dictionary.remove(keyToRemove);
+var foundKey = keys.find(_ => _.someProp === 1);
+dictionary.containsKey(foundKey);
+dictionary.getValueByKey(foundKey);
+dictionary.remove(foundKey);
 
 dictionary.clear();
 ```
