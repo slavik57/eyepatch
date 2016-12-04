@@ -14,6 +14,7 @@ export declare class ObservableDictionary<TKey, TValue> implements IObservableDi
     constructor();
     readonly keys: TKey[];
     readonly values: TValue[];
+    readonly keysAndValues: IKeyValue<TKey, TValue>[];
     readonly size: number;
     readonly itemsChanged: IEventT<IItemsChangedEventArgs<IKeyValue<TKey, TValue>>>;
     add(key: TKey, value: TValue): void;

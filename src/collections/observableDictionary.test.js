@@ -93,6 +93,15 @@ describe('ObservableDictionary', function () {
             chai_1.expect(observableDictionary.values).to.be.length(1);
             chai_1.expect(observableDictionary.values).to.contain(value);
         });
+        it('adding key value pair, should add to keysAndValues', function () {
+            var key = {};
+            var value = {};
+            observableDictionary.add(key, value);
+            var keysAndValues = observableDictionary.keysAndValues;
+            chai_1.expect(keysAndValues).to.be.length(1);
+            chai_1.expect(keysAndValues[0].key).to.be.equal(key);
+            chai_1.expect(keysAndValues[0].value).to.be.equal(value);
+        });
         it('adding key value pair, should set size correctly', function () {
             var key = {};
             var value = {};
@@ -123,6 +132,22 @@ describe('ObservableDictionary', function () {
             for (var i = 0; i < numberOfPairs; i++) {
                 var pair = keyValuePairs[i];
                 chai_1.expect(observableDictionary.values).to.contain(pair.value);
+            }
+        });
+        it('adding multiple key value pairs, should add to keysAndValues', function () {
+            var numberOfPairs = 4;
+            var keyValuePairs = createKeyValuePairs(numberOfPairs);
+            for (var i = 0; i < numberOfPairs; i++) {
+                var pair = keyValuePairs[i];
+                observableDictionary.add(pair.key, pair.value);
+            }
+            var keysAndValues = observableDictionary.keysAndValues;
+            chai_1.expect(keysAndValues).to.be.length(numberOfPairs);
+            for (var i = 0; i < numberOfPairs; i++) {
+                var pair = keyValuePairs[i];
+                var actualPair = keysAndValues[i];
+                chai_1.expect(actualPair.key).to.be.equal(pair.key);
+                chai_1.expect(actualPair.value).to.be.equal(pair.value);
             }
         });
         it('adding multiple key value pairs, should set size correctly', function () {
@@ -231,6 +256,13 @@ describe('ObservableDictionary', function () {
             observableDictionary.remove(key);
             chai_1.expect(observableDictionary.values).to.be.length(0);
         });
+        it('removing key, should remove from keysAndValues', function () {
+            var key = {};
+            var value = {};
+            observableDictionary.add(key, value);
+            observableDictionary.remove(key);
+            chai_1.expect(observableDictionary.keysAndValues).to.be.length(0);
+        });
         it('removing key, should set size correctly', function () {
             var key = {};
             var value = {};
@@ -267,6 +299,22 @@ describe('ObservableDictionary', function () {
             chai_1.expect(observableDictionary.values).to.contain(keyValuePairs[1].value);
             chai_1.expect(observableDictionary.values).not.to.contain(keyValuePairs[2].value);
             chai_1.expect(observableDictionary.values).to.contain(keyValuePairs[3].value);
+        });
+        it('removing multiple keys, should remove from keysAndValues', function () {
+            var numberOfPairs = 4;
+            var keyValuePairs = createKeyValuePairs(numberOfPairs);
+            for (var i = 0; i < numberOfPairs; i++) {
+                var pair = keyValuePairs[i];
+                observableDictionary.add(pair.key, pair.value);
+            }
+            observableDictionary.remove(keyValuePairs[0].key);
+            observableDictionary.remove(keyValuePairs[2].key);
+            var keysAndValues = observableDictionary.keysAndValues;
+            chai_1.expect(keysAndValues).to.be.length(numberOfPairs - 2);
+            chai_1.expect(keysAndValues[0].key).to.be.equal(keyValuePairs[1].key);
+            chai_1.expect(keysAndValues[0].value).to.be.equal(keyValuePairs[1].value);
+            chai_1.expect(keysAndValues[1].key).to.be.equal(keyValuePairs[3].key);
+            chai_1.expect(keysAndValues[1].value).to.be.equal(keyValuePairs[3].value);
         });
         it('removing multiple keys, should set size correctly', function () {
             var numberOfPairs = 4;

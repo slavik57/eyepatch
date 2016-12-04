@@ -153,6 +153,21 @@ describe('ObservableDictionary', () => {
       expect(observableDictionary.values).to.contain(value);
     });
 
+    it('adding key value pair, should add to keysAndValues', () => {
+      // Arrange
+      var key = {};
+      var value = {};
+
+      // Act
+      observableDictionary.add(key, value);
+
+      // Assert
+      var keysAndValues = observableDictionary.keysAndValues;
+      expect(keysAndValues).to.be.length(1);
+      expect(keysAndValues[0].key).to.be.equal(key);
+      expect(keysAndValues[0].value).to.be.equal(value);
+    });
+
     it('adding key value pair, should set size correctly', () => {
       // Arrange
       var key = {};
@@ -204,6 +219,30 @@ describe('ObservableDictionary', () => {
         var pair: IKeyValue<Object, Object> = keyValuePairs[i];
 
         expect(observableDictionary.values).to.contain(pair.value);
+      }
+    });
+
+    it('adding multiple key value pairs, should add to keysAndValues', () => {
+      // Arrange
+      var numberOfPairs = 4;
+      var keyValuePairs = createKeyValuePairs(numberOfPairs);
+
+      // Act
+      for (var i = 0; i < numberOfPairs; i++) {
+        var pair: IKeyValue<Object, Object> = keyValuePairs[i];
+        observableDictionary.add(pair.key, pair.value);
+      }
+
+      // Assert
+      var keysAndValues: IKeyValue<Object, Object>[] = observableDictionary.keysAndValues;
+      expect(keysAndValues).to.be.length(numberOfPairs);
+
+      for (var i = 0; i < numberOfPairs; i++) {
+        var pair: IKeyValue<Object, Object> = keyValuePairs[i];
+        var actualPair: IKeyValue<Object, Object> = keysAndValues[i];
+
+        expect(actualPair.key).to.be.equal(pair.key);
+        expect(actualPair.value).to.be.equal(pair.value);
       }
     });
 
@@ -395,6 +434,18 @@ describe('ObservableDictionary', () => {
       expect(observableDictionary.values).to.be.length(0);
     });
 
+    it('removing key, should remove from keysAndValues', () => {
+      // Arrange
+      var key = {};
+      var value = {};
+      observableDictionary.add(key, value);
+
+      // Act
+      observableDictionary.remove(key);
+      // Assert
+      expect(observableDictionary.keysAndValues).to.be.length(0);
+    });
+
     it('removing key, should set size correctly', () => {
       // Arrange
       var key = {};
@@ -452,6 +503,30 @@ describe('ObservableDictionary', () => {
       expect(observableDictionary.values).to.contain(keyValuePairs[1].value);
       expect(observableDictionary.values).not.to.contain(keyValuePairs[2].value);
       expect(observableDictionary.values).to.contain(keyValuePairs[3].value);
+    });
+
+    it('removing multiple keys, should remove from keysAndValues', () => {
+      // Arrange
+      var numberOfPairs = 4;
+      var keyValuePairs = createKeyValuePairs(numberOfPairs);
+
+      for (var i = 0; i < numberOfPairs; i++) {
+        var pair: IKeyValue<Object, Object> = keyValuePairs[i];
+        observableDictionary.add(pair.key, pair.value);
+      }
+
+      // Act
+      observableDictionary.remove(keyValuePairs[0].key);
+      observableDictionary.remove(keyValuePairs[2].key);
+
+      // Assert
+      var keysAndValues: IKeyValue<Object, Object>[] = observableDictionary.keysAndValues;
+      expect(keysAndValues).to.be.length(numberOfPairs - 2);
+
+      expect(keysAndValues[0].key).to.be.equal(keyValuePairs[1].key);
+      expect(keysAndValues[0].value).to.be.equal(keyValuePairs[1].value);
+      expect(keysAndValues[1].key).to.be.equal(keyValuePairs[3].key);
+      expect(keysAndValues[1].value).to.be.equal(keyValuePairs[3].value);
     });
 
     it('removing multiple keys, should set size correctly', () => {

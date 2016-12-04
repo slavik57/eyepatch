@@ -119,6 +119,7 @@ var size: number = dictionary.size;
 
 var keys: Object[] = dictionary.keys;
 var values: Object[] = dictionary.values;
+var keysAndValues: IKeyValue<Object, Object>[] = dictionary.keysAndValues;
 
 // Be aware: removing will work only on keys instances that are inside the dictionary
 dictionary.remove(key);
