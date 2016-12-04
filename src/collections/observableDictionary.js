@@ -32,6 +32,13 @@ var ObservableDictionary = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ObservableDictionary.prototype, "keysAndValues", {
+        get: function () {
+            return this._getAllKeyValuePairs();
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(ObservableDictionary.prototype, "size", {
         get: function () {
             return this._size;

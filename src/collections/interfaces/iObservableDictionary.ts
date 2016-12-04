@@ -5,6 +5,7 @@ import { IKeyValue } from './iKeyValue';
 export interface IObservableDictionary<TKey, TValue> {
   readonly keys: TKey[];
   readonly values: TValue[];
+  readonly keysAndValues: IKeyValue<TKey, TValue>[];
 
   readonly size: number;
 

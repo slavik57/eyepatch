@@ -51,6 +51,10 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
     return result;
   }
 
+  public get keysAndValues(): IKeyValue<TKey, TValue>[] {
+    return this._getAllKeyValuePairs();
+  }
+
   public get size(): number {
     return this._size;
   }
