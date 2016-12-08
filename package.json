@@ -1,10 +1,11 @@
 {
   "name": "eyepatch",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha -c -b src/**/*.test.js"
+    "test": "./node_modules/.bin/mocha -c -b src/**/*.test.js",
+    "testWatch": "./node_modules/.bin/mocha -c -b -w src/**/*.test.js"
   },
   "repository": {
     "type": "git",

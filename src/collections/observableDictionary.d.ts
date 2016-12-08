@@ -39,4 +39,5 @@ export declare class ObservableDictionary<TKey, TValue> implements IObservableDi
     private _removeKeyFromMap(keyId);
     private _removeValueFromValues(keyId);
     private _resetDictionary();
+    private _isObject(key);
 }
