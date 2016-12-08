@@ -84,7 +84,10 @@ var ObservableDictionary = (function () {
         return null;
     };
     ObservableDictionary.prototype.containsKey = function (key) {
-        return this._keyIdPropertyName in key;
+        if (this._isObject(key)) {
+            return this._keyIdPropertyName in key;
+        }
+        return this._keyIdsToKeysMap[key] === key;
     };
     ObservableDictionary.prototype.containsValue = function (value) {
         for (var keyId in this._keyIdsToValuesMap) {
@@ -175,6 +178,9 @@ var ObservableDictionary = (function () {
         return result;
     };
     ObservableDictionary.prototype._defineKeyId = function (key) {
+        if (!this._isObject(key)) {
+            return key;
+        }
         var keyId = this._getNewKeyId();
         var propertyDescriptor = {
             configurable: true,
@@ -186,10 +192,17 @@ var ObservableDictionary = (function () {
         return keyId;
     };
     ObservableDictionary.prototype._getKeyIdFromKey = function (key) {
-        return key[this._keyIdPropertyName];
+        if (this._isObject(key)) {
+            return key[this._keyIdPropertyName];
+        }
+        else {
+            return key;
+        }
     };
     ObservableDictionary.prototype._removeIdFromKey = function (key) {
-        delete key[this._keyIdPropertyName];
+        if (this._isObject(key)) {
+            delete key[this._keyIdPropertyName];
+        }
     };
     ObservableDictionary.prototype._removeKeyFromMap = function (keyId) {
         delete this._keyIdsToKeysMap[keyId];
@@ -203,6 +216,9 @@ var ObservableDictionary = (function () {
         this._keyIdsToKeysMap = {};
         this._keyIdsToValuesMap = {};
         this._size = 0;
+    };
+    ObservableDictionary.prototype._isObject = function (key) {
+        return typeof key === 'object';
     };
     return ObservableDictionary;
 }());

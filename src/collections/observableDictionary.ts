@@ -103,7 +103,11 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
   }
 
   public containsKey(key: TKey) {
-    return this._keyIdPropertyName in key;
+    if (this._isObject(key)) {
+      return this._keyIdPropertyName in key;
+    }
+
+    return this._keyIdsToKeysMap[<any>key] === key;
   }
 
   public containsValue(value: TValue) {
@@ -123,7 +127,7 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
       throw 'The key is not inside the dictionary';
     }
 
-    var keyId: number = this._getKeyIdFromKey(key);
+    var keyId: any = this._getKeyIdFromKey(key);
 
     return this._keyIdsToValuesMap[keyId];
   }
@@ -192,14 +196,14 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
   }
 
   private _addNewKeyValuePairWithoutRaisingEvent(key: TKey, value: TValue): void {
-    var keyId: number = this._defineKeyId(key);
+    var keyId: any = this._defineKeyId(key);
 
     this._keyIdsToKeysMap[keyId] = key;
     this._keyIdsToValuesMap[keyId] = value;
   }
 
   private _removeWithoutRaisingEventAndReturnRemovedValue(key: TKey): TValue {
-    var keyId: number = this._getKeyIdFromKey(key);
+    var keyId: any = this._getKeyIdFromKey(key);
     this._removeIdFromKey(key);
 
     this._removeKeyFromMap(keyId);
@@ -233,7 +237,11 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
     return result;
   }
 
-  private _defineKeyId(key: TKey): number {
+  private _defineKeyId(key: TKey): any {
+    if (!this._isObject(key)) {
+      return key;
+    }
+
     var keyId = this._getNewKeyId();
 
     var propertyDescriptor: PropertyDescriptor = {
@@ -248,12 +256,18 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
     return keyId;
   }
 
-  private _getKeyIdFromKey(key: TKey): number {
-    return key[this._keyIdPropertyName];
+  private _getKeyIdFromKey(key: TKey): any {
+    if (this._isObject(key)) {
+      return key[this._keyIdPropertyName];
+    } else {
+      return key;
+    }
   }
 
   private _removeIdFromKey(key: TKey): void {
-    delete key[this._keyIdPropertyName];
+    if (this._isObject(key)) {
+      delete key[this._keyIdPropertyName];
+    }
   }
 
   private _removeKeyFromMap(keyId: number): void {
@@ -273,5 +287,9 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
     this._keyIdsToValuesMap = {};
 
     this._size = 0;
+  }
+
+  private _isObject(key: TKey): boolean {
+    return typeof key === 'object';
   }
 }
