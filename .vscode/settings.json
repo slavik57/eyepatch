@@ -3,7 +3,10 @@
   "files.exclude": {
     "src/**/*.js": true,
     "src/**/*.js.map": true,
-    "src/**/*.d.ts": true
+    "src/**/*.d.ts": true,
+    "index.js": true,
+    "index.js.map": true,
+    "index.d.ts": true
   },
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
