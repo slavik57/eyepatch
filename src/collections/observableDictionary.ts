@@ -30,10 +30,14 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
   }
 
   public get keys(): TKey[] {
-    var result: TKey[] = [];
+    const result: TKey[] = [];
 
-    for (var keyId in this._keyIdsToKeysMap) {
-      var key: TKey = this._keyIdsToKeysMap[keyId];
+    for (const keyId in this._keyIdsToKeysMap) {
+      if (!this._keyIdsToKeysMap.hasOwnProperty(keyId)) {
+        continue;
+      }
+
+      const key: TKey = this._keyIdsToKeysMap[keyId];
       result.push(key);
     }
 
@@ -41,10 +45,14 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
   }
 
   public get values(): TValue[] {
-    var result: TValue[] = [];
+    const result: TValue[] = [];
 
-    for (var keyId in this._keyIdsToValuesMap) {
-      var value: TValue = this._keyIdsToValuesMap[keyId];
+    for (const keyId in this._keyIdsToValuesMap) {
+      if (!this._keyIdsToValuesMap.hasOwnProperty(keyId)) {
+        continue;
+      }
+
+      const value: TValue = this._keyIdsToValuesMap[keyId];
       result.push(value);
     }
 
@@ -79,10 +87,10 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
 
     this._size--;
 
-    var removedValue: TValue =
+    const removedValue: TValue =
       this._removeWithoutRaisingEventAndReturnRemovedValue(key);
 
-    var removedPair: IKeyValue<TKey, TValue> = {
+    const removedPair: IKeyValue<TKey, TValue> = {
       key: key,
       value: removedValue
     };
@@ -91,7 +99,7 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
   }
 
   public findKey(predicate: (key: TKey) => boolean): TKey {
-    var keys: TKey[] = this.keys;
+    const keys: TKey[] = this.keys;
 
     for (let i = 0; i < keys.length; i++) {
       if (predicate(keys[i])) {
@@ -111,8 +119,12 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
   }
 
   public containsValue(value: TValue) {
-    for (var keyId in this._keyIdsToValuesMap) {
-      var existingValue: TValue = this._keyIdsToValuesMap[keyId];
+    for (const keyId in this._keyIdsToValuesMap) {
+      if (!this._keyIdsToValuesMap.hasOwnProperty(keyId)) {
+        continue;
+      }
+
+      const existingValue: TValue = this._keyIdsToValuesMap[keyId];
 
       if (value === existingValue) {
         return true;
@@ -127,17 +139,17 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
       throw 'The key is not inside the dictionary';
     }
 
-    var keyId: any = this._getKeyIdFromKey(key);
+    const keyId: any = this._getKeyIdFromKey(key);
 
     return this._keyIdsToValuesMap[keyId];
   }
 
   public clear(): void {
-    var removedPairs: IKeyValue<TKey, TValue>[] =
+    const removedPairs: IKeyValue<TKey, TValue>[] =
       this._getAllKeyValuePairs();
 
-    for (var i = 0; i < removedPairs.length; i++) {
-      var key: TKey = removedPairs[i].key;
+    for (let i = 0; i < removedPairs.length; i++) {
+      const key: TKey = removedPairs[i].key;
 
       this._removeIdFromKey(key);
     }
@@ -148,7 +160,7 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
   }
 
   private _getNewObservabledDictionaryId(): number {
-    var newId = ObservableDictionary._observableDictionaryId;
+    const newId = ObservableDictionary._observableDictionaryId;
 
     ObservableDictionary._observableDictionaryId++;
 
@@ -168,7 +180,7 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
   private _addNewKeyValuePair(key: TKey, value: TValue): void {
     this._addNewKeyValuePairWithoutRaisingEvent(key, value);
 
-    var addedPair: IKeyValue<TKey, TValue> = {
+    const addedPair: IKeyValue<TKey, TValue> = {
       key: key,
       value: value
     }
@@ -177,17 +189,17 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
   }
 
   private _overrideExistingKeyValuePair(key: TKey, value: TValue): void {
-    var removedValue: TValue =
+    const removedValue: TValue =
       this._removeWithoutRaisingEventAndReturnRemovedValue(key);
 
     this._addNewKeyValuePairWithoutRaisingEvent(key, value);
 
-    var addedPair: IKeyValue<TKey, TValue> = {
+    const addedPair: IKeyValue<TKey, TValue> = {
       key: key,
       value: value
     };
 
-    var removedPair: IKeyValue<TKey, TValue> = {
+    const removedPair: IKeyValue<TKey, TValue> = {
       key: key,
       value: removedValue
     };
@@ -196,19 +208,19 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
   }
 
   private _addNewKeyValuePairWithoutRaisingEvent(key: TKey, value: TValue): void {
-    var keyId: any = this._defineKeyId(key);
+    const keyId: any = this._defineKeyId(key);
 
     this._keyIdsToKeysMap[keyId] = key;
     this._keyIdsToValuesMap[keyId] = value;
   }
 
   private _removeWithoutRaisingEventAndReturnRemovedValue(key: TKey): TValue {
-    var keyId: any = this._getKeyIdFromKey(key);
+    const keyId: any = this._getKeyIdFromKey(key);
     this._removeIdFromKey(key);
 
     this._removeKeyFromMap(keyId);
 
-    var value: TValue =
+    const value: TValue =
       this._removeValueFromValues(keyId);
 
     return value;
@@ -222,11 +234,15 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
   }
 
   private _getAllKeyValuePairs(): IKeyValue<TKey, TValue>[] {
-    var result: IKeyValue<TKey, TValue>[] = [];
+    const result: IKeyValue<TKey, TValue>[] = [];
 
-    for (var keyId in this._keyIdsToKeysMap) {
-      var key: TKey = this._keyIdsToKeysMap[keyId];
-      var value: TValue = this._keyIdsToValuesMap[keyId];
+    for (const keyId in this._keyIdsToKeysMap) {
+      if (!this._keyIdsToKeysMap.hasOwnProperty(keyId)) {
+        continue;
+      }
+
+      const key: TKey = this._keyIdsToKeysMap[keyId];
+      const value: TValue = this._keyIdsToValuesMap[keyId];
 
       result.push({
         key: key,
@@ -242,9 +258,9 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
       return key;
     }
 
-    var keyId = this._getNewKeyId();
+    const keyId = this._getNewKeyId();
 
-    var propertyDescriptor: PropertyDescriptor = {
+    const propertyDescriptor: PropertyDescriptor = {
       configurable: true,
       enumerable: false,
       writable: false,
@@ -275,7 +291,7 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
   }
 
   private _removeValueFromValues(keyId: number): TValue {
-    var value: TValue = this._keyIdsToValuesMap[keyId];
+    const value: TValue = this._keyIdsToValuesMap[keyId];
 
     delete this._keyIdsToValuesMap[keyId];
 

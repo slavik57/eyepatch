@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha -c -b src/**/*.test.js",
-    "testWatch": "./node_modules/.bin/mocha -c -b -w src/**/*.test.js"
+    "build": "./node_modules/.bin/gulp",
+    "mochaTest": "./node_modules/.bin/mocha -c -b src/**/*.test.js",
+    "mochaTestWatch": "./node_modules/.bin/mocha -c -b -w src/**/*.test.js",
+    "test": "npm run mochaTest",
+    "testWatch": "npm run mochaTestWatch"
   },
   "repository": {
     "type": "git",
@@ -22,7 +25,14 @@
   "homepage": "https://github.com/slavik57/eyepatch#readme",
   "devDependencies": {
     "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-tslint": "^7.0.1",
+    "gulp-typescript": "^3.1.3",
+    "merge2": "^1.0.2",
     "mocha": "^2.5.3",
-    "sinon": "^1.17.3"
+    "run-sequence": "^1.2.2",
+    "sinon": "^1.17.6",
+    "tslint": "^4.0.2",
+    "typescript": "^2.1.4"
   }
 }

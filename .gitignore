@@ -1,2 +1,5 @@
-node_modules/.bin
-node_modules/mocha/*
+node_modules/**/*
+coverage/**/*
+src/**/*.js
+src/**/*.js.map
+src/**/*.d.ts

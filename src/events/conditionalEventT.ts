@@ -1,22 +1,26 @@
-import {IEventHandlerT} from './interfaces/iEventHandler';
-import {IConditionT} from './interfaces/iCondition';
-import {IConditionalRaisableEventT} from './interfaces/iConditionalRaisableEvent';
+import { IEventHandlerT } from './interfaces/iEventHandler';
+import { IConditionT } from './interfaces/iCondition';
+import { IConditionalRaisableEventT } from './interfaces/iConditionalRaisableEvent';
 
 interface IConditionalEventHandler<T> {
   eventHandler: IEventHandlerT<T>;
   condition: IConditionT<T>;
 }
 
-export class ConditionalEventT<T> implements IConditionalRaisableEventT<T>{
-  private _defaultTruthyCondition: IConditionT<T> = () => true;
+export class ConditionalEventT<T> implements IConditionalRaisableEventT<T> {
+  private _defaultTruthyCondition: IConditionT<T>;
   private _conditionalEventHandlers: IConditionalEventHandler<T>[] = [];
+
+  constructor() {
+    this._defaultTruthyCondition = () => true;
+  }
 
   public on(eventHandler: IEventHandlerT<T>, condition?: IConditionT<T>): void {
     if (!condition) {
       condition = this._defaultTruthyCondition;
     }
 
-    var conditionalEventHandler: IConditionalEventHandler<T> = {
+    const conditionalEventHandler: IConditionalEventHandler<T> = {
       eventHandler: eventHandler,
       condition: condition
     };
@@ -59,8 +63,8 @@ export class ConditionalEventT<T> implements IConditionalRaisableEventT<T>{
   }
 
   private _isAlreadyRegistered(conditionalEventHandlerToCheck: IConditionalEventHandler<T>) {
-    for (var i = 0; i < this._conditionalEventHandlers.length; i++) {
-      var conditionalEventHandler: IConditionalEventHandler<T> = this._conditionalEventHandlers[i];
+    for (let i = 0; i < this._conditionalEventHandlers.length; i++) {
+      const conditionalEventHandler: IConditionalEventHandler<T> = this._conditionalEventHandlers[i];
 
       if (this._areSameConditionalEventHandlers(conditionalEventHandler, conditionalEventHandlerToCheck)) {
         return true;
@@ -89,10 +93,10 @@ export class ConditionalEventT<T> implements IConditionalRaisableEventT<T>{
   }
 
   private _filterConditionalEventHandlersThatContainEventHandler(eventHandler: IEventHandlerT<T>): IConditionalEventHandler<T>[] {
-    var result: IConditionalEventHandler<T>[] = [];
+    const result: IConditionalEventHandler<T>[] = [];
 
-    for (var i = 0; i < this._conditionalEventHandlers.length; i++) {
-      var conditionalEventHandler: IConditionalEventHandler<T> =
+    for (let i = 0; i < this._conditionalEventHandlers.length; i++) {
+      const conditionalEventHandler: IConditionalEventHandler<T> =
         this._conditionalEventHandlers[i];
 
       if (conditionalEventHandler.eventHandler !== eventHandler) {
@@ -103,16 +107,17 @@ export class ConditionalEventT<T> implements IConditionalRaisableEventT<T>{
     return result;
   }
 
-  private _filterConditionalEventHandlersByEventHandlerAndCondition(eventHandler: IEventHandlerT<T>, condition: IConditionT<T>): IConditionalEventHandler<T>[] {
-    var conditionalEventHandlerToFilter: IConditionalEventHandler<T> = {
+  private _filterConditionalEventHandlersByEventHandlerAndCondition(eventHandler: IEventHandlerT<T>,
+    condition: IConditionT<T>): IConditionalEventHandler<T>[] {
+    const conditionalEventHandlerToFilter: IConditionalEventHandler<T> = {
       eventHandler: eventHandler,
       condition: condition
     }
 
-    var result: IConditionalEventHandler<T>[] = [];
+    const result: IConditionalEventHandler<T>[] = [];
 
-    for (var i = 0; i < this._conditionalEventHandlers.length; i++) {
-      var conditionalEventHandler: IConditionalEventHandler<T> =
+    for (let i = 0; i < this._conditionalEventHandlers.length; i++) {
+      const conditionalEventHandler: IConditionalEventHandler<T> =
         this._conditionalEventHandlers[i];
 
       if (!this._areSameConditionalEventHandlers(conditionalEventHandler, conditionalEventHandlerToFilter)) {

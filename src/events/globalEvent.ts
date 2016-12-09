@@ -1,7 +1,7 @@
-import {EventT} from "./eventT";
-import {IGlobalEvent} from "./interfaces/iGlobalEvent";
-import {IRaisableEventT} from "./interfaces/iRaisableEvent";
-import {IEventHandlerT} from "./interfaces/iEventHandler";
+import { EventT } from './eventT';
+import { IGlobalEvent } from './interfaces/iGlobalEvent';
+import { IRaisableEventT } from './interfaces/iRaisableEvent';
+import { IEventHandlerT } from './interfaces/iEventHandler';
 
 export class GlobalEvent implements IGlobalEvent {
   private static _globalEventsMap: { [key: string]: IRaisableEventT<any> } = {};

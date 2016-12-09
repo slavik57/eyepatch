@@ -32,7 +32,7 @@ export class ObservableCollection<T> implements IObservableCollection<T> {
   }
 
   public removeMatching(item: T): void {
-    var removedItems = this._items.filter(_item => _item === item);
+    const removedItems = this._items.filter(_item => _item === item);
     this._items = this._items.filter(_item => _item !== item);
 
     this._raiseItemsRemoved(removedItems);
@@ -43,7 +43,7 @@ export class ObservableCollection<T> implements IObservableCollection<T> {
       throw 'removeRange cannot be called with null or undefined';
     }
 
-    var removedItems =
+    const removedItems =
       this._items.filter(_item => this._isItemInsideArray(items, _item));
 
     this._items =
@@ -57,7 +57,7 @@ export class ObservableCollection<T> implements IObservableCollection<T> {
       return;
     }
 
-    var itemToRemove = this._items[index];
+    const itemToRemove = this._items[index];
 
     this._items.splice(index, 1);
 
@@ -69,11 +69,11 @@ export class ObservableCollection<T> implements IObservableCollection<T> {
       throw 'removeAtIndices cannot be called with null or undefined';
     }
 
-    var filteredItems = [];
-    var removedItems = [];
+    const filteredItems = [];
+    const removedItems = [];
 
-    for (var i = 0; i < this._items.length; i++) {
-      var item = this._items[i];
+    for (let i = 0; i < this._items.length; i++) {
+      const item = this._items[i];
 
       if (this._isItemInsideArray(indices, i)) {
         removedItems.push(item);
@@ -88,7 +88,7 @@ export class ObservableCollection<T> implements IObservableCollection<T> {
   }
 
   public clear(): void {
-    var removedItems = this._items;
+    const removedItems = this._items;
     this._items = [];
 
     this._raiseItemsRemoved(removedItems);
@@ -103,7 +103,7 @@ export class ObservableCollection<T> implements IObservableCollection<T> {
   }
 
   private _raiseItemsAdded(items: T[]): void {
-    var eventArgs: IItemsChangedEventArgs<T> = {
+    const eventArgs: IItemsChangedEventArgs<T> = {
       added: items,
       removed: []
     };
@@ -112,7 +112,7 @@ export class ObservableCollection<T> implements IObservableCollection<T> {
   }
 
   private _raiseItemsRemoved(items: T[]): void {
-    var eventArgs: IItemsChangedEventArgs<T> = {
+    const eventArgs: IItemsChangedEventArgs<T> = {
       added: [],
       removed: items
     };
