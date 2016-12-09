@@ -1,6 +1,6 @@
-import {IEventHandlerT} from './interfaces/iEventHandler';
-import {IRaisableEventT} from './interfaces/iRaisableEvent';
-import {ConditionalEventT} from './conditionalEventT';
+import { IEventHandlerT } from './interfaces/iEventHandler';
+import { IRaisableEventT } from './interfaces/iRaisableEvent';
+import { ConditionalEventT } from './conditionalEventT';
 
 export class EventT<T> implements IRaisableEventT<T> {
   private _conditionalEventT: ConditionalEventT<T> = new ConditionalEventT<T>();

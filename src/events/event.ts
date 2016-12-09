@@ -1,6 +1,6 @@
-import {IEventHandler} from './interfaces/iEventHandler';
-import {IRaisableEvent} from './interfaces/iRaisableEvent';
-import {EventT} from './eventT';
+import { IEventHandler } from './interfaces/iEventHandler';
+import { IRaisableEvent } from './interfaces/iRaisableEvent';
+import { EventT } from './eventT';
 
 export class Event implements IRaisableEvent {
   private _eventT: EventT<any> = new EventT<any>();

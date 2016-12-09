@@ -1,5 +1,5 @@
-import {IEventHandler, IEventHandlerT} from './iEventHandler';
-import {ICondition, IConditionT} from './iCondition';
+import { IEventHandler, IEventHandlerT } from './iEventHandler';
+import { ICondition, IConditionT } from './iCondition';
 
 export interface IConditionalEvent {
   on(eventHandler: IEventHandler, condition?: ICondition): void;

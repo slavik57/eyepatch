@@ -1,6 +1,6 @@
-import {IGlobalEvent} from "./interfaces/iGlobalEvent";
-import {GlobalEvent} from "./globalEvent";
-import {expect} from 'chai';
+import { IGlobalEvent } from './interfaces/iGlobalEvent';
+import { GlobalEvent } from './globalEvent';
+import { expect } from 'chai';
 
 class EventSubscriber {
   public static REGULAR_EVENT_NAME = 'regular event name';
@@ -81,7 +81,7 @@ describe('GlobalEvent', () => {
 
   it('raising an event after unsubscribing from it should not raise it', () => {
     const eventName = 'event name';
-    let numberOfTimesRaised: number = 0;
+    let numberOfTimesRaised = 0;
 
     const eventHandler = () => numberOfTimesRaised++;
 

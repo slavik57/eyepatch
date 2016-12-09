@@ -1,4 +1,4 @@
-import {IEvent, IEventT} from './iEvent';
+import { IEvent, IEventT } from './iEvent';
 
 export interface IRaisableEvent extends IEvent {
   raise(): void;

@@ -1,4 +1,4 @@
-import {IEventHandler, IEventHandlerT} from './iEventHandler';
+import { IEventHandler, IEventHandlerT } from './iEventHandler';
 
 export interface IEvent {
   on(eventHandler: IEventHandler): void;

@@ -1,5 +1,5 @@
-import {IEventT} from '../../events/interfaces/iEvent';
-import {IItemsChangedEventArgs} from './iItemsChangedEventArgs';
+import { IEventT } from '../../events/interfaces/iEvent';
+import { IItemsChangedEventArgs } from './iItemsChangedEventArgs';
 
 export interface IObservableCollection<T> {
   readonly items: T[];

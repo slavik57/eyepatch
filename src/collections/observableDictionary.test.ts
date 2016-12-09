@@ -13,9 +13,13 @@ interface IPropertyWithValue {
 describe('ObservableDictionary', () => {
 
   function getPropertiesAndValues(object: any): IPropertyWithValue[] {
-    var result: IPropertyWithValue[] = [];
+    const result: IPropertyWithValue[] = [];
 
-    for (var property in object) {
+    for (let property in object) {
+      if (!object.hasOwnProperty(property)) {
+        continue;
+      }
+
       result.push({
         property: property,
         value: object[property]
@@ -30,20 +34,21 @@ describe('ObservableDictionary', () => {
 
     expect(actual).to.be.length(expected.length);
 
-    for (var i = 0; i < expected.length; i++) {
-      var actualPropery = actual[i].property;
-      var actualValue = actual[i].value;
+    for (let i = 0; i < expected.length; i++) {
+      const actualPropery = actual[i].property;
+      const actualValue = actual[i].value;
 
-      var expectedProperty = expected[i].property;
-      var expectedValue = expected[i].value;
+      const expectedProperty = expected[i].property;
+      const expectedValue = expected[i].value;
 
       expect(actualPropery).to.be.equal(expectedProperty);
       expect(actualValue).to.be.equal(expectedValue);
     }
   }
 
-  function registerToItemsChangedEvent<T>(observableDictionary: IObservableDictionary<T, Object>): IItemsChangedEventArgs<IKeyValue<T, Object>>[] {
-    var actualArgs: IItemsChangedEventArgs<IKeyValue<T, Object>>[] = [];
+  function registerToItemsChangedEvent<T>(observableDictionary: IObservableDictionary<T, Object>):
+    IItemsChangedEventArgs<IKeyValue<T, Object>>[] {
+    const actualArgs: IItemsChangedEventArgs<IKeyValue<T, Object>>[] = [];
 
     observableDictionary.itemsChanged.on(
       _args => {
@@ -58,9 +63,9 @@ describe('ObservableDictionary', () => {
 
     expect(actual).to.be.length(expected.length);
 
-    for (var i = 0; i < expected.length; i++) {
-      var actualArg = actual[i];
-      var expectedArg = expected[i];
+    for (let i = 0; i < expected.length; i++) {
+      const actualArg = actual[i];
+      const expectedArg = expected[i];
 
       veriftyItemsChangedEventArgsAreEqual(actualArg, expectedArg);
     }
@@ -77,9 +82,9 @@ describe('ObservableDictionary', () => {
     expected: IKeyValue<T, Object>[]): void {
     expect(actual).to.be.length(expected.length);
 
-    for (var i = 0; i < expected.length; i++) {
-      var actualKeyValue: IKeyValue<T, Object> = actual[i];
-      var expectedKeyValue: IKeyValue<T, Object> = expected[i];
+    for (let i = 0; i < expected.length; i++) {
+      const actualKeyValue: IKeyValue<T, Object> = actual[i];
+      const expectedKeyValue: IKeyValue<T, Object> = expected[i];
 
       expect(actualKeyValue.key).to.be.equal(expectedKeyValue.key);
       expect(actualKeyValue.value).to.be.equal(expectedKeyValue.value);
@@ -101,7 +106,7 @@ describe('ObservableDictionary', () => {
   describe('constructor', () => {
     it('should initialize with empty keys and values', () => {
       // Act
-      var observableDictionary = new ObservableDictionary<any, any>();
+      const observableDictionary = new ObservableDictionary<any, any>();
 
       // Assert
       expect(observableDictionary.keys).to.be.empty;
@@ -110,7 +115,7 @@ describe('ObservableDictionary', () => {
 
     it('should set size correctly', () => {
       // Act
-      var observableDictionary = new ObservableDictionary<any, any>();
+      const observableDictionary = new ObservableDictionary<any, any>();
 
       // Assert
       expect(observableDictionary.size).to.be.equal(0);
@@ -128,13 +133,13 @@ describe('ObservableDictionary', () => {
       complexValue: { c: 'c', d: ['e'] },
       complexValue2: { d: 5, e: '6' },
       createKeyValuePairs: (): IKeyValue<Object, Object>[] => {
-        var numberOfPairs = 4;
+        const numberOfPairs = 4;
 
-        var result: IKeyValue<Object, Object>[] = [];
+        const result: IKeyValue<Object, Object>[] = [];
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var key = { keyItem: i };
-          var value = { valueItem: i };
+        for (let i = 0; i < numberOfPairs; i++) {
+          const key = { keyItem: i };
+          const value = { valueItem: i };
 
           result.push({
             key: key,
@@ -158,13 +163,13 @@ describe('ObservableDictionary', () => {
       complexValue: { c: 'c', d: ['e'] },
       complexValue2: { d: 5, e: '6' },
       createKeyValuePairs: (): IKeyValue<string, Object>[] => {
-        var numberOfPairs = 4;
+        const numberOfPairs = 4;
 
-        var result: IKeyValue<string, Object>[] = [];
+        const result: IKeyValue<string, Object>[] = [];
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var key = `key ${i}`;
-          var value = { valueItem: i };
+        for (let i = 0; i < numberOfPairs; i++) {
+          const key = `key ${i}`;
+          const value = { valueItem: i };
 
           result.push({
             key: key,
@@ -188,13 +193,13 @@ describe('ObservableDictionary', () => {
       complexValue: { c: 'c', d: ['e'] },
       complexValue2: { d: 5, e: '6' },
       createKeyValuePairs: (): IKeyValue<number, Object>[] => {
-        var numberOfPairs = 4;
+        const numberOfPairs = 4;
 
-        var result: IKeyValue<number, Object>[] = [];
+        const result: IKeyValue<number, Object>[] = [];
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var key = i;
-          var value = { valueItem: i };
+        for (let i = 0; i < numberOfPairs; i++) {
+          const key = i;
+          const value = { valueItem: i };
 
           result.push({
             key: key,
@@ -218,13 +223,13 @@ describe('ObservableDictionary', () => {
       complexValue: { c: 'c', d: ['e'] },
       complexValue2: { d: 5, e: '6' },
       createKeyValuePairs: (): IKeyValue<boolean, Object>[] => {
-        var numberOfPairs = 2;
+        const numberOfPairs = 2;
 
-        var result: IKeyValue<boolean, Object>[] = [];
+        const result: IKeyValue<boolean, Object>[] = [];
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var key = i % 2 === 0;
-          var value = { valueItem: i };
+        for (let i = 0; i < numberOfPairs; i++) {
+          const key = i % 2 === 0;
+          const value = { valueItem: i };
 
           result.push({
             key: key,
@@ -238,8 +243,8 @@ describe('ObservableDictionary', () => {
   });
 
   function testDictionaryWithConfiguration<T>(getConfiguration: () => IConfiguration<T>) {
-    var observableDictionary: IObservableDictionary<T, Object>;
-    var configuration: IConfiguration<T>;
+    let observableDictionary: IObservableDictionary<T, Object>;
+    let configuration: IConfiguration<T>;
 
     beforeEach(() => {
       configuration = getConfiguration();
@@ -270,7 +275,7 @@ describe('ObservableDictionary', () => {
         observableDictionary.add(configuration.key, configuration.value);
 
         // Assert
-        var keysAndValues = observableDictionary.keysAndValues;
+        const keysAndValues = observableDictionary.keysAndValues;
         expect(keysAndValues).to.be.length(1);
         expect(keysAndValues[0].key).to.be.equal(configuration.key);
         expect(keysAndValues[0].value).to.be.equal(configuration.value);
@@ -286,20 +291,20 @@ describe('ObservableDictionary', () => {
 
       it('adding multiple key value pairs, should add to keys', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
         // Act
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
         // Assert
         expect(observableDictionary.keys).to.be.length(numberOfPairs);
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
 
           expect(observableDictionary.keys).to.contain(pair.key);
         }
@@ -307,20 +312,20 @@ describe('ObservableDictionary', () => {
 
       it('adding multiple key value pairs, should add to values', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
         // Act
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
         // Assert
         expect(observableDictionary.values).to.be.length(numberOfPairs);
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
 
           expect(observableDictionary.values).to.contain(pair.value);
         }
@@ -328,22 +333,22 @@ describe('ObservableDictionary', () => {
 
       it('adding multiple key value pairs, should add to keysAndValues', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
         // Act
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
         // Assert
-        var keysAndValues: IKeyValue<T, Object>[] = observableDictionary.keysAndValues;
+        const keysAndValues: IKeyValue<T, Object>[] = observableDictionary.keysAndValues;
         expect(keysAndValues).to.be.length(numberOfPairs);
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
-          var actualPair: IKeyValue<T, Object> = keysAndValues[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
+          const actualPair: IKeyValue<T, Object> = keysAndValues[i];
 
           expect(actualPair.key).to.be.equal(pair.key);
           expect(actualPair.value).to.be.equal(pair.value);
@@ -352,12 +357,12 @@ describe('ObservableDictionary', () => {
 
       it('adding multiple key value pairs, should set size correctly', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
         // Act
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
@@ -367,11 +372,11 @@ describe('ObservableDictionary', () => {
 
       it('adding key value pair, should not affect the json representation of both', () => {
         // Arrange
-        var key = configuration.complexKey;
-        var value = configuration.complexValue;
+        const key = configuration.complexKey;
+        const value = configuration.complexValue;
 
-        var expectedKeyJson = JSON.stringify(key);
-        var expectedValueJson = JSON.stringify(value);
+        const expectedKeyJson = JSON.stringify(key);
+        const expectedValueJson = JSON.stringify(value);
 
         // Act
         observableDictionary.add(key, value);
@@ -383,17 +388,17 @@ describe('ObservableDictionary', () => {
 
       it('adding key value pair, should not affect the for in loop for the key', () => {
         // Arrange
-        var key = configuration.complexKey;
-        var value = configuration.complexValue;
+        const key = configuration.complexKey;
+        const value = configuration.complexValue;
 
-        var expectedPropertiesWithValues: IPropertyWithValue[] =
+        const expectedPropertiesWithValues: IPropertyWithValue[] =
           getPropertiesAndValues(key);
 
         // Act
         observableDictionary.add(key, value);
 
         // Assert
-        var actualPropertiesWithValues: IPropertyWithValue[] =
+        const actualPropertiesWithValues: IPropertyWithValue[] =
           getPropertiesAndValues(key);
 
         verifySamePropertiesAndValues(actualPropertiesWithValues,
@@ -402,17 +407,17 @@ describe('ObservableDictionary', () => {
 
       it('adding key value pair, should not affect the for in loop for the value', () => {
         // Arrange
-        var key = configuration.complexKey;
-        var value = configuration.complexValue;
+        const key = configuration.complexKey;
+        const value = configuration.complexValue;
 
-        var expectedPropertiesWithValues: IPropertyWithValue[] =
+        const expectedPropertiesWithValues: IPropertyWithValue[] =
           getPropertiesAndValues(value);
 
         // Act
         observableDictionary.add(key, value);
 
         // Assert
-        var actualPropertiesWithValues: IPropertyWithValue[] =
+        const actualPropertiesWithValues: IPropertyWithValue[] =
           getPropertiesAndValues(value);
 
         verifySamePropertiesAndValues(actualPropertiesWithValues,
@@ -421,12 +426,12 @@ describe('ObservableDictionary', () => {
 
       it('adding multiple key value pairs, should raise itemsChanged correctly', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        var expectedArgs: IItemsChangedEventArgs<IKeyValue<T, Object>>[] = [];
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        const expectedArgs: IItemsChangedEventArgs<IKeyValue<T, Object>>[] = [];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
 
           expectedArgs.push({
             added: [pair],
@@ -434,12 +439,12 @@ describe('ObservableDictionary', () => {
           });
         }
 
-        var actualArgs: IItemsChangedEventArgs<IKeyValue<Object, Object>>[] =
+        const actualArgs: IItemsChangedEventArgs<IKeyValue<Object, Object>>[] =
           registerToItemsChangedEvent(observableDictionary);
 
         // Act
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
@@ -449,9 +454,9 @@ describe('ObservableDictionary', () => {
 
       it('adding key value pair with existing key, should override the value', () => {
         // Arrange
-        var key = configuration.key;
-        var value1 = configuration.value;
-        var value2 = configuration.value2;
+        const key = configuration.key;
+        const value1 = configuration.value;
+        const value2 = configuration.value2;
 
         observableDictionary.add(key, value1);
 
@@ -471,13 +476,13 @@ describe('ObservableDictionary', () => {
 
       it('adding key value pair with existing key, should raise itemsChanged correctly', () => {
         // Arrange
-        var key = configuration.key;
-        var value1 = configuration.value;
-        var value2 = configuration.value2;
+        const key = configuration.key;
+        const value1 = configuration.value;
+        const value2 = configuration.value2;
 
         observableDictionary.add(key, value1);
 
-        var expectedArgs: IItemsChangedEventArgs<IKeyValue<T, Object>>[] =
+        const expectedArgs: IItemsChangedEventArgs<IKeyValue<T, Object>>[] =
           [
             {
               added: [{ key: key, value: value2 }],
@@ -485,7 +490,7 @@ describe('ObservableDictionary', () => {
             }
           ];
 
-        var actualArgs: IItemsChangedEventArgs<IKeyValue<T, Object>>[] =
+        const actualArgs: IItemsChangedEventArgs<IKeyValue<T, Object>>[] =
           registerToItemsChangedEvent(observableDictionary);
 
         // Act
@@ -499,7 +504,7 @@ describe('ObservableDictionary', () => {
     describe('remove', () => {
       it('removing non existing key, should not throw exception', () => {
         // Act
-        var action = () => observableDictionary.remove(configuration.key);
+        const action = () => observableDictionary.remove(configuration.key);
 
         // Assert
         expect(action).not.to.throw();
@@ -515,8 +520,8 @@ describe('ObservableDictionary', () => {
 
       it('removing key, should remove from keys', () => {
         // Arrange
-        var key = configuration.key;
-        var value = configuration.value;
+        const key = configuration.key;
+        const value = configuration.value;
         observableDictionary.add(key, value);
 
         // Act
@@ -528,8 +533,8 @@ describe('ObservableDictionary', () => {
 
       it('removing key, should remove from values', () => {
         // Arrange
-        var key = configuration.key;
-        var value = configuration.value;
+        const key = configuration.key;
+        const value = configuration.value;
         observableDictionary.add(key, value);
 
         // Act
@@ -540,8 +545,8 @@ describe('ObservableDictionary', () => {
 
       it('removing key, should remove from keysAndValues', () => {
         // Arrange
-        var key = configuration.key;
-        var value = configuration.value;
+        const key = configuration.key;
+        const value = configuration.value;
         observableDictionary.add(key, value);
 
         // Act
@@ -552,8 +557,8 @@ describe('ObservableDictionary', () => {
 
       it('removing key, should set size correctly', () => {
         // Arrange
-        var key = configuration.key;
-        var value = configuration.value;
+        const key = configuration.key;
+        const value = configuration.value;
         observableDictionary.add(key, value);
 
         // Act
@@ -565,16 +570,16 @@ describe('ObservableDictionary', () => {
 
       it('removing multiple keys, should remove from keys', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
-        var pairToRemove1 = keyValuePairs[0];
-        var pairToRemove2 = keyValuePairs[numberOfPairs / 2];
+        const pairToRemove1 = keyValuePairs[0];
+        const pairToRemove2 = keyValuePairs[numberOfPairs / 2];
 
         // Act
         observableDictionary.remove(pairToRemove1.key);
@@ -585,8 +590,8 @@ describe('ObservableDictionary', () => {
         expect(observableDictionary.keys).not.to.contain(pairToRemove1.key);
         expect(observableDictionary.keys).not.to.contain(pairToRemove2.key);
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           if (pair === pairToRemove1 ||
             pair === pairToRemove2) {
             continue;
@@ -598,16 +603,16 @@ describe('ObservableDictionary', () => {
 
       it('removing multiple keys, should remove from values', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
-        var pairToRemove1 = keyValuePairs[0];
-        var pairToRemove2 = keyValuePairs[numberOfPairs / 2];
+        const pairToRemove1 = keyValuePairs[0];
+        const pairToRemove2 = keyValuePairs[numberOfPairs / 2];
 
         // Act
         observableDictionary.remove(pairToRemove1.key);
@@ -618,8 +623,8 @@ describe('ObservableDictionary', () => {
         expect(observableDictionary.values).not.to.contain(pairToRemove1.value);
         expect(observableDictionary.values).not.to.contain(pairToRemove2.value);
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           if (pair === pairToRemove1 ||
             pair === pairToRemove2) {
             continue;
@@ -631,23 +636,23 @@ describe('ObservableDictionary', () => {
 
       it('removing multiple keys, should remove from keysAndValues', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
-        var pairToRemove1 = keyValuePairs[0];
-        var pairToRemove2 = keyValuePairs[numberOfPairs / 2];
+        const pairToRemove1 = keyValuePairs[0];
+        const pairToRemove2 = keyValuePairs[numberOfPairs / 2];
 
         // Act
         observableDictionary.remove(pairToRemove1.key);
         observableDictionary.remove(pairToRemove2.key);
 
         // Assert
-        var keysAndValues: IKeyValue<T, Object>[] = observableDictionary.keysAndValues;
+        const keysAndValues: IKeyValue<T, Object>[] = observableDictionary.keysAndValues;
 
         expect(keysAndValues).to.be.length(numberOfPairs - 2);
         expect(keysAndValues.map(_ => _.key)).not.to.contain(pairToRemove1.key);
@@ -655,8 +660,8 @@ describe('ObservableDictionary', () => {
         expect(keysAndValues.map(_ => _.value)).not.to.contain(pairToRemove1.value);
         expect(keysAndValues.map(_ => _.value)).not.to.contain(pairToRemove2.value);
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           if (pair === pairToRemove1 ||
             pair === pairToRemove2) {
             continue;
@@ -669,16 +674,16 @@ describe('ObservableDictionary', () => {
 
       it('removing multiple keys, should set size correctly', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
-        var pairToRemove1 = keyValuePairs[0];
-        var pairToRemove2 = keyValuePairs[numberOfPairs / 2];
+        const pairToRemove1 = keyValuePairs[0];
+        const pairToRemove2 = keyValuePairs[numberOfPairs / 2];
 
         // Act
         observableDictionary.remove(pairToRemove1.key);
@@ -690,11 +695,11 @@ describe('ObservableDictionary', () => {
 
       it('removing key, should not affect the json representation of both key and value', () => {
         // Arrange
-        var key = configuration.complexKey;
-        var value = configuration.complexValue;
+        const key = configuration.complexKey;
+        const value = configuration.complexValue;
 
-        var expectedKeyJson = JSON.stringify(key);
-        var expectedValueJson = JSON.stringify(value);
+        const expectedKeyJson = JSON.stringify(key);
+        const expectedValueJson = JSON.stringify(value);
 
         observableDictionary.add(key, value);
 
@@ -708,10 +713,10 @@ describe('ObservableDictionary', () => {
 
       it('removing key, should not affect the for in loop for the key', () => {
         // Arrange
-        var key = configuration.complexKey;
-        var value = configuration.complexValue;
+        const key = configuration.complexKey;
+        const value = configuration.complexValue;
 
-        var expectedPropertiesWithValues: IPropertyWithValue[] =
+        const expectedPropertiesWithValues: IPropertyWithValue[] =
           getPropertiesAndValues(key);
 
         observableDictionary.add(key, value);
@@ -720,7 +725,7 @@ describe('ObservableDictionary', () => {
         observableDictionary.remove(key);
 
         // Assert
-        var actualPropertiesWithValues: IPropertyWithValue[] =
+        const actualPropertiesWithValues: IPropertyWithValue[] =
           getPropertiesAndValues(key);
 
         verifySamePropertiesAndValues(actualPropertiesWithValues,
@@ -729,10 +734,10 @@ describe('ObservableDictionary', () => {
 
       it('removing key, should not affect the for in loop for the value', () => {
         // Arrange
-        var key = configuration.complexKey;
-        var value = configuration.complexValue;
+        const key = configuration.complexKey;
+        const value = configuration.complexValue;
 
-        var expectedPropertiesWithValues: IPropertyWithValue[] =
+        const expectedPropertiesWithValues: IPropertyWithValue[] =
           getPropertiesAndValues(value);
 
         observableDictionary.add(key, value);
@@ -741,7 +746,7 @@ describe('ObservableDictionary', () => {
         observableDictionary.remove(key);
 
         // Assert
-        var actualPropertiesWithValues: IPropertyWithValue[] =
+        const actualPropertiesWithValues: IPropertyWithValue[] =
           getPropertiesAndValues(value);
 
         verifySamePropertiesAndValues(actualPropertiesWithValues,
@@ -750,18 +755,18 @@ describe('ObservableDictionary', () => {
 
       it('removing multiple keys, should raise itemsChanged correctly', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
-        var pairToRemove1 = keyValuePairs[0];
-        var pairToRemove2 = keyValuePairs[numberOfPairs / 2];
+        const pairToRemove1 = keyValuePairs[0];
+        const pairToRemove2 = keyValuePairs[numberOfPairs / 2];
 
-        var expectedArgs: IItemsChangedEventArgs<IKeyValue<T, Object>>[] =
+        const expectedArgs: IItemsChangedEventArgs<IKeyValue<T, Object>>[] =
           [
             {
               added: [],
@@ -773,7 +778,7 @@ describe('ObservableDictionary', () => {
             }
           ];
 
-        var actualArgs: IItemsChangedEventArgs<IKeyValue<T, Object>>[] =
+        const actualArgs: IItemsChangedEventArgs<IKeyValue<T, Object>>[] =
           registerToItemsChangedEvent(observableDictionary);
 
         // Act
@@ -786,21 +791,21 @@ describe('ObservableDictionary', () => {
 
       it('removing by found key, should remove', () => {
         // Arrange
-        var key = { someProp: 1 };
-        var value = '1';
+        const key = { someProp: 1 };
+        const value = '1';
 
         interface ISomeKey {
           someProp: number;
         }
 
-        var dictionary = new ObservableDictionary<ISomeKey, string>();
+        const dictionary = new ObservableDictionary<ISomeKey, string>();
         dictionary.add(key, value);
         expect(dictionary.size).to.be.equal(1);
         expect(dictionary.keys).to.contain(key);
 
         // Act
-        var key = dictionary.findKey(_ => _.someProp === 1);
-        dictionary.remove(key);
+        const foundKey = dictionary.findKey(_ => _.someProp === 1);
+        dictionary.remove(foundKey);
 
         // Assert
         expect(dictionary.size).to.be.equal(0);
@@ -811,7 +816,7 @@ describe('ObservableDictionary', () => {
     describe('containsKey', () => {
       it('non existing key, should return false', () => {
         // Act
-        var result = observableDictionary.containsKey(configuration.key);
+        const result = observableDictionary.containsKey(configuration.key);
 
         // Assert
         expect(result).to.be.false;
@@ -819,13 +824,13 @@ describe('ObservableDictionary', () => {
 
       it('adding key value pair, should contain the key', () => {
         // Arrange
-        var key = configuration.key;
-        var value = configuration.value;
+        const key = configuration.key;
+        const value = configuration.value;
 
         observableDictionary.add(key, value);
 
         // Act
-        var result = observableDictionary.containsKey(key);
+        const result = observableDictionary.containsKey(key);
 
         // Assert
         expect(result).to.be.true;
@@ -833,39 +838,39 @@ describe('ObservableDictionary', () => {
 
       it('adding multiple key value pairs, should contain the keys', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
         // Act
-        var results: boolean[] = [];
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        const results: boolean[] = [];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
 
-          var result = observableDictionary.containsKey(pair.key);
+          const result = observableDictionary.containsKey(pair.key);
           results.push(result);
         }
 
         // Assert
-        for (var i = 0; i < numberOfPairs; i++) {
+        for (let i = 0; i < numberOfPairs; i++) {
           expect(results[i]).to.be.true;
         }
       });
 
       it('removing key, should not contain the key', () => {
         // Arrange
-        var key = configuration.key;
-        var value = configuration.value;
+        const key = configuration.key;
+        const value = configuration.value;
         observableDictionary.add(key, value);
 
         observableDictionary.remove(key);
 
         // Act
-        var result = observableDictionary.containsKey(key);
+        const result = observableDictionary.containsKey(key);
 
         // Assert
         expect(result).to.be.false;
@@ -873,26 +878,26 @@ describe('ObservableDictionary', () => {
 
       it('removing multiple keys, should not contain the keys', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
-        var pairToRemove1 = keyValuePairs[0];
-        var pairToRemove2 = keyValuePairs[numberOfPairs / 2];
+        const pairToRemove1 = keyValuePairs[0];
+        const pairToRemove2 = keyValuePairs[numberOfPairs / 2];
 
         observableDictionary.remove(pairToRemove1.key);
         observableDictionary.remove(pairToRemove2.key);
 
         // Act
-        var results: boolean[] = [];
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        const results: boolean[] = [];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
 
-          var result = observableDictionary.containsKey(pair.key);
+          const result = observableDictionary.containsKey(pair.key);
           results.push(result);
         }
 
@@ -903,7 +908,7 @@ describe('ObservableDictionary', () => {
         results.splice(numberOfPairs / 2);
         results.splice(0);
 
-        for (var i = 0; i < results.length; i++) {
+        for (let i = 0; i < results.length; i++) {
           expect(results[i]).to.be.true;
         }
       });
@@ -912,7 +917,7 @@ describe('ObservableDictionary', () => {
     describe('containsValue', () => {
       it('non existing value, should return false', () => {
         // Act
-        var result = observableDictionary.containsValue(configuration.key);
+        const result = observableDictionary.containsValue(configuration.key);
 
         // Assert
         expect(result).to.be.false;
@@ -920,13 +925,13 @@ describe('ObservableDictionary', () => {
 
       it('adding key value pair, should contain the value', () => {
         // Arrange
-        var key = configuration.key;
-        var value = configuration.value;
+        const key = configuration.key;
+        const value = configuration.value;
 
         observableDictionary.add(key, value);
 
         // Act
-        var result = observableDictionary.containsValue(value);
+        const result = observableDictionary.containsValue(value);
 
         // Assert
         expect(result).to.be.true;
@@ -934,39 +939,39 @@ describe('ObservableDictionary', () => {
 
       it('adding multiple key value pairs, should contain the values', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
         // Act
-        var results: boolean[] = [];
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        const results: boolean[] = [];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
 
-          var result = observableDictionary.containsValue(pair.value);
+          const result = observableDictionary.containsValue(pair.value);
           results.push(result);
         }
 
         // Assert
-        for (var i = 0; i < numberOfPairs; i++) {
+        for (let i = 0; i < numberOfPairs; i++) {
           expect(results[i]).to.be.true;
         }
       });
 
       it('removing key, should not contain the value', () => {
         // Arrange
-        var key = configuration.key;
-        var value = configuration.value;
+        const key = configuration.key;
+        const value = configuration.value;
         observableDictionary.add(key, value);
 
         observableDictionary.remove(key);
 
         // Act
-        var result = observableDictionary.containsValue(value);
+        const result = observableDictionary.containsValue(value);
 
         // Assert
         expect(result).to.be.false;
@@ -974,26 +979,26 @@ describe('ObservableDictionary', () => {
 
       it('removing multiple keys, should not contain the values', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
-        var pairToRemove1 = keyValuePairs[0];
-        var pairToRemove2 = keyValuePairs[numberOfPairs / 2];
+        const pairToRemove1 = keyValuePairs[0];
+        const pairToRemove2 = keyValuePairs[numberOfPairs / 2];
 
         observableDictionary.remove(pairToRemove1.key);
         observableDictionary.remove(pairToRemove2.key);
 
         // Act
-        var results: boolean[] = [];
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        const results: boolean[] = [];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
 
-          var result = observableDictionary.containsValue(pair.value);
+          const result = observableDictionary.containsValue(pair.value);
           results.push(result);
         }
 
@@ -1004,7 +1009,7 @@ describe('ObservableDictionary', () => {
         results.splice(numberOfPairs / 2);
         results.splice(0);
 
-        for (var i = 0; i < results.length; i++) {
+        for (let i = 0; i < results.length; i++) {
           expect(results[i]).to.be.true;
         }
       });
@@ -1019,7 +1024,7 @@ describe('ObservableDictionary', () => {
     describe('getValueByKey', () => {
       it('non existing key, should throw error', () => {
         // Act
-        var action = () => observableDictionary.getValueByKey(configuration.key);
+        const action = () => observableDictionary.getValueByKey(configuration.key);
 
         // Assert
         expect(action).to.throw();
@@ -1027,13 +1032,13 @@ describe('ObservableDictionary', () => {
 
       it('adding key value pair, should return correct value', () => {
         // Arrange
-        var key = configuration.key;
-        var value = configuration.value;
+        const key = configuration.key;
+        const value = configuration.value;
 
         observableDictionary.add(key, value);
 
         // Act
-        var result = observableDictionary.getValueByKey(key);
+        const result = observableDictionary.getValueByKey(key);
 
         // Assert
         expect(result).to.be.equal(value);
@@ -1041,39 +1046,39 @@ describe('ObservableDictionary', () => {
 
       it('adding multiple key value pairs, should return correct values', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
         // Act
-        var results: Object[] = [];
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        const results: Object[] = [];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
 
-          var result = observableDictionary.getValueByKey(pair.key);
+          const result = observableDictionary.getValueByKey(pair.key);
           results.push(result);
         }
 
         // Assert
-        for (var i = 0; i < numberOfPairs; i++) {
+        for (let i = 0; i < numberOfPairs; i++) {
           expect(results[i]).to.be.equal(keyValuePairs[i].value);
         }
       });
 
       it('requesting removed key, should throw error', () => {
         // Arrange
-        var key = configuration.key;
-        var value = configuration.value;
+        const key = configuration.key;
+        const value = configuration.value;
         observableDictionary.add(key, value);
 
         observableDictionary.remove(key);
 
         // Act
-        var action = () => observableDictionary.getValueByKey(key);
+        const action = () => observableDictionary.getValueByKey(key);
 
         // Assert
         expect(action).to.throw();
@@ -1081,23 +1086,23 @@ describe('ObservableDictionary', () => {
 
       it('removing multiple keys, should throw error on requesting removed keys', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
-        var pairToRemove1 = keyValuePairs[0];
-        var pairToRemove2 = keyValuePairs[numberOfPairs / 2];
+        const pairToRemove1 = keyValuePairs[0];
+        const pairToRemove2 = keyValuePairs[numberOfPairs / 2];
 
         observableDictionary.remove(pairToRemove1.key);
         observableDictionary.remove(pairToRemove2.key);
 
         // Act + Assert
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           if (pair === pairToRemove1 ||
             pair === pairToRemove2) {
             expect(() => observableDictionary.getValueByKey(pair.key)).to.throw();
@@ -1112,10 +1117,10 @@ describe('ObservableDictionary', () => {
     describe('clear', () => {
       it('clear on empty dictionary, should not throw exception', () => {
         // Arrange
-        var observableDictionary = new ObservableDictionary<T, any>();
+        const observableDictionary = new ObservableDictionary<T, any>();
 
         // Act
-        var action = () => observableDictionary.clear();
+        const action = () => observableDictionary.clear();
 
         // Assert
         expect(action).not.to.throw();
@@ -1123,7 +1128,7 @@ describe('ObservableDictionary', () => {
 
       it('clear on empty dictionary, should set size correctly', () => {
         // Arrange
-        var observableDictionary = new ObservableDictionary<T, any>();
+        const observableDictionary = new ObservableDictionary<T, any>();
 
         // Act
         observableDictionary.clear();
@@ -1134,11 +1139,11 @@ describe('ObservableDictionary', () => {
 
       it('should clear the keys', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
@@ -1151,11 +1156,11 @@ describe('ObservableDictionary', () => {
 
       it('should clear the values', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
@@ -1168,11 +1173,11 @@ describe('ObservableDictionary', () => {
 
       it('clear on not empty dictionary, should set size correctly', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
@@ -1185,21 +1190,21 @@ describe('ObservableDictionary', () => {
 
       it('should raise itemsChanged correctly', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        var expectedArgs: IItemsChangedEventArgs<IKeyValue<T, Object>>[] =
+        const expectedArgs: IItemsChangedEventArgs<IKeyValue<T, Object>>[] =
           [{
             added: [],
             removed: keyValuePairs
           }];
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
-        var actualArgs: IItemsChangedEventArgs<IKeyValue<Object, Object>>[] =
+        const actualArgs: IItemsChangedEventArgs<IKeyValue<Object, Object>>[] =
           registerToItemsChangedEvent(observableDictionary);
 
         // Act
@@ -1211,11 +1216,11 @@ describe('ObservableDictionary', () => {
 
       it('should not contain the previosley existing keys', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
@@ -1223,8 +1228,8 @@ describe('ObservableDictionary', () => {
         observableDictionary.clear();
 
         // Assert
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
 
           expect(observableDictionary.containsKey(pair.key)).to.be.false;
         }
@@ -1232,11 +1237,11 @@ describe('ObservableDictionary', () => {
 
       it('should not contain the previosley existing values', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
@@ -1244,8 +1249,8 @@ describe('ObservableDictionary', () => {
         observableDictionary.clear();
 
         // Assert
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
 
           expect(observableDictionary.containsValue(pair.value)).to.be.false;
         }
@@ -1255,7 +1260,7 @@ describe('ObservableDictionary', () => {
     describe('findKey', () => {
       it('returning false for all, should return null', () => {
         // Act
-        var result = observableDictionary.findKey(_ => false);
+        const result = observableDictionary.findKey(_ => false);
 
         // Assert
         expect(result).to.be.null;
@@ -1263,13 +1268,13 @@ describe('ObservableDictionary', () => {
 
       it('adding key value pair, should return true on the key, should return the key', () => {
         // Arrange
-        var key = configuration.key;
-        var value = configuration.value;
+        const key = configuration.key;
+        const value = configuration.value;
 
         observableDictionary.add(key, value);
 
         // Act
-        var result = observableDictionary.findKey(_ => _ === key);
+        const result = observableDictionary.findKey(_ => _ === key);
 
         // Assert
         expect(result).to.be.equal(key);
@@ -1277,16 +1282,16 @@ describe('ObservableDictionary', () => {
 
       it('adding multiple key value pairs, returns true on second, should contain the second', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
         // Act
-        var result = observableDictionary.findKey(_ => _ === keyValuePairs[1].key);
+        const result = observableDictionary.findKey(_ => _ === keyValuePairs[1].key);
 
         // Assert
         expect(result).to.be.equal(keyValuePairs[1].key);
@@ -1294,14 +1299,14 @@ describe('ObservableDictionary', () => {
 
       it('removing key, should not find the key', () => {
         // Arrange
-        var key = configuration.key;
-        var value = configuration.value;
+        const key = configuration.key;
+        const value = configuration.value;
         observableDictionary.add(key, value);
 
         observableDictionary.remove(key);
 
         // Act
-        var result = observableDictionary.findKey(_ => _ === key);
+        const result = observableDictionary.findKey(_ => _ === key);
 
         // Assert
         expect(result).to.be.null;
@@ -1309,30 +1314,30 @@ describe('ObservableDictionary', () => {
 
       it('removing multiple keys, should not find the keys', () => {
         // Arrange
-        var keyValuePairs = configuration.createKeyValuePairs();
-        var numberOfPairs = keyValuePairs.length;
+        const keyValuePairs = configuration.createKeyValuePairs();
+        const numberOfPairs = keyValuePairs.length;
 
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
           observableDictionary.add(pair.key, pair.value);
         }
 
-        var pairToRemove1 = keyValuePairs[0];
-        var pairToRemove2 = keyValuePairs[numberOfPairs / 2];
+        const pairToRemove1 = keyValuePairs[0];
+        const pairToRemove2 = keyValuePairs[numberOfPairs / 2];
 
         observableDictionary.remove(pairToRemove1.key);
         observableDictionary.remove(pairToRemove2.key);
 
         // Act
-        var results: T[] = [];
-        var expectedResults: T[] = [];
-        for (var i = 0; i < numberOfPairs; i++) {
-          var pair: IKeyValue<T, Object> = keyValuePairs[i];
+        const results: T[] = [];
+        const expectedResults: T[] = [];
+        for (let i = 0; i < numberOfPairs; i++) {
+          const pair: IKeyValue<T, Object> = keyValuePairs[i];
 
-          var result = observableDictionary.findKey(_ => _ === pair.key);
+          const result = observableDictionary.findKey(_ => _ === pair.key);
           results.push(result);
 
-          if (pair === pairToRemove1 || pair === pairToRemove2){
+          if (pair === pairToRemove1 || pair === pairToRemove2) {
             expectedResults.push(null);
           } else {
             expectedResults.push(pair.key);
@@ -1340,7 +1345,7 @@ describe('ObservableDictionary', () => {
         }
 
         // Assert
-        for (var i = 0; i< results.length ; i++){
+        for (let i = 0; i < results.length; i++) {
           expect(results[i]).to.be.equal(expectedResults[i]);
         }
       });
@@ -1349,14 +1354,14 @@ describe('ObservableDictionary', () => {
     describe('multiple dictionaries', () => {
       it('adding to multiple dictionaries should contain the keys and values in all', () => {
         // Arrange
-        var key1 = configuration.key;
-        var key2 = configuration.key2;
-        var value1 = configuration.value;
-        var value2 = configuration.value2;
+        const key1 = configuration.key;
+        const key2 = configuration.key2;
+        const value1 = configuration.value;
+        const value2 = configuration.value2;
 
-        var observableDictionary1 = new ObservableDictionary<any, any>();
-        var observableDictionary2 = new ObservableDictionary<any, any>();
-        var observableDictionary3 = new ObservableDictionary<any, any>();
+        const observableDictionary1 = new ObservableDictionary<any, any>();
+        const observableDictionary2 = new ObservableDictionary<any, any>();
+        const observableDictionary3 = new ObservableDictionary<any, any>();
 
         // Act
         observableDictionary1.add(key1, value1);
@@ -1409,14 +1414,14 @@ describe('ObservableDictionary', () => {
 
       it('add to multiple dictionaries, remove key from one, clear the other, should act properly', () => {
         // Arrange
-        var key1 = configuration.complexKey;
-        var key2 = configuration.complexKey2;
-        var value1 = configuration.complexValue;
-        var value2 = configuration.complexValue2;
+        const key1 = configuration.complexKey;
+        const key2 = configuration.complexKey2;
+        const value1 = configuration.complexValue;
+        const value2 = configuration.complexValue2;
 
-        var observableDictionary1 = new ObservableDictionary<any, any>();
-        var observableDictionary2 = new ObservableDictionary<any, any>();
-        var observableDictionary3 = new ObservableDictionary<any, any>();
+        const observableDictionary1 = new ObservableDictionary<any, any>();
+        const observableDictionary2 = new ObservableDictionary<any, any>();
+        const observableDictionary3 = new ObservableDictionary<any, any>();
 
         // Act
         observableDictionary1.add(key1, value1);

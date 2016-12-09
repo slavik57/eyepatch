@@ -1,8 +1,8 @@
-import {expect} from 'chai';
-import {IConditionT} from './interfaces/iCondition';
-import {IEventHandlerT} from './interfaces/iEventHandler';
-import {IConditionalEventT} from './interfaces/iConditionalEvent';
-import {ConditionalEventT} from './conditionalEventT';
+import { expect } from 'chai';
+import { IConditionT } from './interfaces/iCondition';
+import { IEventHandlerT } from './interfaces/iEventHandler';
+import { IConditionalEventT } from './interfaces/iConditionalEvent';
+import { ConditionalEventT } from './conditionalEventT';
 
 interface ITestEventHandler<T> extends IEventHandlerT<T> {
   actualDataThatWasCalledWith: T[];
@@ -13,14 +13,14 @@ interface ITestCondition<T> extends IConditionT<T> {
 }
 
 describe('ConditionalEventT', () => {
-  var event: ConditionalEventT<any>;
+  let event: ConditionalEventT<any>;
 
   beforeEach(() => {
     event = new ConditionalEventT<any>();
   });
 
   function createEventHandler<T>(): ITestEventHandler<T> {
-    var eventHandler: ITestEventHandler<T> = <any>((_data: T) => {
+    const eventHandler: ITestEventHandler<T> = <any>((_data: T) => {
       eventHandler.actualDataThatWasCalledWith.push(_data);
     });
 
@@ -30,7 +30,7 @@ describe('ConditionalEventT', () => {
   }
 
   function createThrowingEventHandler<T>(): ITestEventHandler<T> {
-    var eventHandler: ITestEventHandler<T> = <any>((_data: T) => {
+    const eventHandler: ITestEventHandler<T> = <any>((_data: T) => {
       eventHandler.actualDataThatWasCalledWith.push(_data);
 
       throw 'some error';
@@ -42,7 +42,7 @@ describe('ConditionalEventT', () => {
   }
 
   function createConditionWithReturnValue<T>(returnValue: boolean): ITestCondition<T> {
-    var condition: ITestCondition<T> = <any>((_data: T) => {
+    const condition: ITestCondition<T> = <any>((_data: T) => {
       condition.actualDataThatWasCalledWith.push(_data);
 
       return returnValue;
@@ -54,7 +54,7 @@ describe('ConditionalEventT', () => {
   }
 
   function createThrowintCondition<T>(): ITestCondition<T> {
-    var condition: ITestCondition<T> = <any>((_data: T) => {
+    const condition: ITestCondition<T> = <any>((_data: T) => {
       condition.actualDataThatWasCalledWith.push(_data);
 
       throw 'some error';
@@ -75,7 +75,7 @@ describe('ConditionalEventT', () => {
   function verifyEventHandlerWasRaisedXTimes<T>(times: number, eventHandler: ITestEventHandler<T>, data: T[]): void {
     expect(eventHandler.actualDataThatWasCalledWith.length).to.be.equal(times);
 
-    for (var i = 0; i < times; i++) {
+    for (let i = 0; i < times; i++) {
       expect(eventHandler.actualDataThatWasCalledWith[i]).to.be.equal(data[i]);
     }
   }
@@ -91,7 +91,7 @@ describe('ConditionalEventT', () => {
   function verifyConditionWasCalledXTimes<T>(times: number, condition: ITestCondition<T>, data: T[]): void {
     expect(condition.actualDataThatWasCalledWith.length).to.be.equal(times);
 
-    for (var i = 0; i < times; i++) {
+    for (let i = 0; i < times; i++) {
       expect(condition.actualDataThatWasCalledWith[i]).to.be.equal(data[i]);
     }
   }
@@ -107,10 +107,10 @@ describe('ConditionalEventT', () => {
   describe('on', () => {
     it('registering same event twice should not throw error', () => {
       // Arrange
-      var handler = createEventHandler();
+      const handler = createEventHandler();
 
       // Act
-      var registeringAction = () => {
+      const registeringAction = () => {
         event.on(handler);
         event.on(handler);
       }
@@ -121,11 +121,11 @@ describe('ConditionalEventT', () => {
 
     it('registering same event with same condition twice should not throw error', () => {
       // Arrange
-      var handler = createEventHandler();
-      var condition = createConditionWithReturnValue(true);
+      const handler = createEventHandler();
+      const condition = createConditionWithReturnValue(true);
 
       // Act
-      var registeringAction = () => {
+      const registeringAction = () => {
         event.on(handler, condition);
         event.on(handler, condition);
       }
@@ -138,10 +138,10 @@ describe('ConditionalEventT', () => {
   describe('off', () => {
     it('unregistering not registered event should not throw error', () => {
       // Arrange
-      var handler = createEventHandler();
+      const handler = createEventHandler();
 
       // Act
-      var unregisteringAction = () => {
+      const unregisteringAction = () => {
         event.off(handler);
       }
 
@@ -158,11 +158,11 @@ describe('ConditionalEventT', () => {
 
       it('raising on registered event should raise event on all registratios', () => {
         // Arrange
-        var handler1 = createEventHandler();
-        var handler2 = createEventHandler();
-        var handler3 = createEventHandler();
+        const handler1 = createEventHandler();
+        const handler2 = createEventHandler();
+        const handler3 = createEventHandler();
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(handler1);
@@ -178,9 +178,9 @@ describe('ConditionalEventT', () => {
 
       it('registering twice with same event handler, raising, should raise once', () => {
         // Arrange
-        var handler = createEventHandler();
+        const handler = createEventHandler();
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(handler);
@@ -193,13 +193,13 @@ describe('ConditionalEventT', () => {
 
       it('registering event handler that throws an error should throw error', () => {
         // Arrange
-        var throwingHandler = createThrowingEventHandler();
+        const throwingHandler = createThrowingEventHandler();
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(throwingHandler);
-        var raisingAction = () => event.raise(data);
+        const raisingAction = () => event.raise(data);
 
         // Assert
         expect(raisingAction).to.throw();
@@ -208,15 +208,15 @@ describe('ConditionalEventT', () => {
 
       it('registering event handler that throws an error should not raise the next event handler', () => {
         // Arrange
-        var throwingHandler = createThrowingEventHandler();
-        var handler = createEventHandler();
+        const throwingHandler = createThrowingEventHandler();
+        const handler = createEventHandler();
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(throwingHandler);
         event.on(handler);
-        var raisingAction = () => event.raise(data);
+        const raisingAction = () => event.raise(data);
 
         // Assert
         expect(raisingAction).to.throw();
@@ -226,10 +226,10 @@ describe('ConditionalEventT', () => {
 
       it('unregistering event handler should not raise it', () => {
         // Arrange
-        var handler = createEventHandler();
-        var handlerToUnregister = createEventHandler();
+        const handler = createEventHandler();
+        const handlerToUnregister = createEventHandler();
 
-        var data = createData();
+        const data = createData();
 
         event.on(handler);
         event.on(handlerToUnregister);
@@ -244,13 +244,13 @@ describe('ConditionalEventT', () => {
 
       it('unregistering event handler should raise the not ramoved event handlers', () => {
         // Arrange
-        var handler1 = createEventHandler();
-        var handler2 = createEventHandler();
-        var handlerToUnregister = createEventHandler();
-        var handler3 = createEventHandler();
-        var handler4 = createEventHandler();
+        const handler1 = createEventHandler();
+        const handler2 = createEventHandler();
+        const handlerToUnregister = createEventHandler();
+        const handler3 = createEventHandler();
+        const handler4 = createEventHandler();
 
-        var data = createData();
+        const data = createData();
 
         event.on(handler1);
         event.on(handler2);
@@ -274,14 +274,14 @@ describe('ConditionalEventT', () => {
     describe('with condition', () => {
       it('raising should only call event handlers with truthy conditions', () => {
         // Arrange
-        var handler1 = createEventHandler();
-        var handler2 = createEventHandler();
-        var handler3 = createEventHandler();
+        const handler1 = createEventHandler();
+        const handler2 = createEventHandler();
+        const handler3 = createEventHandler();
 
-        var trueCondition = createConditionWithReturnValue(true);
-        var falseCondition = createConditionWithReturnValue(false);
+        const trueCondition = createConditionWithReturnValue(true);
+        const falseCondition = createConditionWithReturnValue(false);
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(handler1, trueCondition);
@@ -300,11 +300,11 @@ describe('ConditionalEventT', () => {
 
       it('raising should call the condition once', () => {
         // Arrange
-        var handler = createEventHandler();
+        const handler = createEventHandler();
 
-        var trueCondition = createConditionWithReturnValue(true);
+        const trueCondition = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(handler, trueCondition);
@@ -316,10 +316,10 @@ describe('ConditionalEventT', () => {
 
       it('registering twice with same event handler and same condition, raising, should raise once', () => {
         // Arrange
-        var handler = createEventHandler();
-        var condition = createConditionWithReturnValue(true);
+        const handler = createEventHandler();
+        const condition = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(handler, condition);
@@ -333,11 +333,11 @@ describe('ConditionalEventT', () => {
 
       it('registering twice with same event handler and different condition, raising, should raise twice', () => {
         // Arrange
-        var handler = createEventHandler();
-        var condition1 = createConditionWithReturnValue(true);
-        var condition2 = createConditionWithReturnValue(true);
+        const handler = createEventHandler();
+        const condition1 = createConditionWithReturnValue(true);
+        const condition2 = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(handler, condition1);
@@ -352,14 +352,14 @@ describe('ConditionalEventT', () => {
 
       it('registering event handler that throws an error should throw error', () => {
         // Arrange
-        var throwingHandler = createThrowingEventHandler();
-        var condition = createConditionWithReturnValue(true);
+        const throwingHandler = createThrowingEventHandler();
+        const condition = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(throwingHandler, condition);
-        var raisingAction = () => event.raise(data);
+        const raisingAction = () => event.raise(data);
 
         // Assert
         expect(raisingAction).to.throw();
@@ -369,14 +369,14 @@ describe('ConditionalEventT', () => {
 
       it('registering event handler with condition that throws an error should throw error', () => {
         // Arrange
-        var eventHandler = createEventHandler();
-        var throwingCondition = createThrowintCondition();
+        const eventHandler = createEventHandler();
+        const throwingCondition = createThrowintCondition();
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(eventHandler, throwingCondition);
-        var raisingAction = () => event.raise(data);
+        const raisingAction = () => event.raise(data);
 
         // Assert
         expect(raisingAction).to.throw();
@@ -386,17 +386,17 @@ describe('ConditionalEventT', () => {
 
       it('registering event handler that throws an error should not raise the next event handler or condition', () => {
         // Arrange
-        var throwingHandler = createThrowingEventHandler();
-        var condition1 = createConditionWithReturnValue(true);
-        var handler = createEventHandler();
-        var condition2 = createConditionWithReturnValue(true);
+        const throwingHandler = createThrowingEventHandler();
+        const condition1 = createConditionWithReturnValue(true);
+        const handler = createEventHandler();
+        const condition2 = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(throwingHandler, condition1);
         event.on(handler, condition2);
-        var raisingAction = () => event.raise(data);
+        const raisingAction = () => event.raise(data);
 
         // Assert
         expect(raisingAction).to.throw();
@@ -408,17 +408,17 @@ describe('ConditionalEventT', () => {
 
       it('registering event handler with condition that throws an error should not raise the next event handler or condition', () => {
         // Arrange
-        var handler1 = createThrowingEventHandler();
-        var throwingCondition = createThrowintCondition();
-        var handler2 = createEventHandler();
-        var condition2 = createConditionWithReturnValue(true);
+        const handler1 = createThrowingEventHandler();
+        const throwingCondition = createThrowintCondition();
+        const handler2 = createEventHandler();
+        const condition2 = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(handler1, throwingCondition);
         event.on(handler2, condition2);
-        var raisingAction = () => event.raise(data);
+        const raisingAction = () => event.raise(data);
 
         // Assert
         expect(raisingAction).to.throw();
@@ -430,12 +430,12 @@ describe('ConditionalEventT', () => {
 
       it('unregistering event handler should not raise it', () => {
         // Arrange
-        var handler = createEventHandler();
-        var condition = createConditionWithReturnValue(true);
-        var handlerToUnregister = createEventHandler();
-        var conditionOfHandlerToUnregister = createConditionWithReturnValue(true);
+        const handler = createEventHandler();
+        const condition = createConditionWithReturnValue(true);
+        const handlerToUnregister = createEventHandler();
+        const conditionOfHandlerToUnregister = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         event.on(handler, condition);
         event.on(handlerToUnregister, conditionOfHandlerToUnregister);
@@ -451,18 +451,18 @@ describe('ConditionalEventT', () => {
 
       it('unregistering event handler should raise the not ramoved event handlers', () => {
         // Arrange
-        var handler1 = createEventHandler();
-        var condition1 = createConditionWithReturnValue(true);
-        var handler2 = createEventHandler();
-        var condition2 = createConditionWithReturnValue(true);
-        var handlerToUnregister = createEventHandler();
-        var conditionOfHandlerToUnregister = createConditionWithReturnValue(true);
-        var handler3 = createEventHandler();
-        var condition3 = createConditionWithReturnValue(true);
-        var handler4 = createEventHandler();
-        var condition4 = createConditionWithReturnValue(true);
+        const handler1 = createEventHandler();
+        const condition1 = createConditionWithReturnValue(true);
+        const handler2 = createEventHandler();
+        const condition2 = createConditionWithReturnValue(true);
+        const handlerToUnregister = createEventHandler();
+        const conditionOfHandlerToUnregister = createConditionWithReturnValue(true);
+        const handler3 = createEventHandler();
+        const condition3 = createConditionWithReturnValue(true);
+        const handler4 = createEventHandler();
+        const condition4 = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         event.on(handler1, condition1);
         event.on(handler2, condition2);
@@ -489,12 +489,12 @@ describe('ConditionalEventT', () => {
 
       it('registering same handler with different conditions, unregister without condition, raise, should not raise', () => {
         // Arrange
-        var handler = createEventHandler();
-        var condition1 = createConditionWithReturnValue(true);
-        var condition2 = createConditionWithReturnValue(true);
-        var condition3 = createConditionWithReturnValue(true);
+        const handler = createEventHandler();
+        const condition1 = createConditionWithReturnValue(true);
+        const condition2 = createConditionWithReturnValue(true);
+        const condition3 = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         event.on(handler, condition1);
         event.on(handler, condition2);
@@ -513,12 +513,12 @@ describe('ConditionalEventT', () => {
 
       it('registering same handler with different conditions, unregister with condition, raise, should raise correctly', () => {
         // Arrange
-        var handler = createEventHandler();
-        var condition1 = createConditionWithReturnValue(true);
-        var condition2 = createConditionWithReturnValue(true);
-        var condition3 = createConditionWithReturnValue(true);
+        const handler = createEventHandler();
+        const condition1 = createConditionWithReturnValue(true);
+        const condition2 = createConditionWithReturnValue(true);
+        const condition3 = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         event.on(handler, condition1);
         event.on(handler, condition2);
@@ -545,11 +545,11 @@ describe('ConditionalEventT', () => {
 
       it('raising on registered event should raise event on all registratios', () => {
         // Arrange
-        var handler1 = createEventHandler();
-        var handler2 = createEventHandler();
-        var handler3 = createEventHandler();
+        const handler1 = createEventHandler();
+        const handler2 = createEventHandler();
+        const handler3 = createEventHandler();
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(handler1);
@@ -565,9 +565,9 @@ describe('ConditionalEventT', () => {
 
       it('registering twice with same event handler, raising, should raise once', () => {
         // Arrange
-        var handler = createEventHandler();
+        const handler = createEventHandler();
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(handler);
@@ -580,13 +580,13 @@ describe('ConditionalEventT', () => {
 
       it('registering event handler that throws an error should not throw error', () => {
         // Arrange
-        var throwingHandler = createThrowingEventHandler();
+        const throwingHandler = createThrowingEventHandler();
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(throwingHandler);
-        var raisingAction = () => event.raiseSafe(data);
+        const raisingAction = () => event.raiseSafe(data);
 
         // Assert
         expect(raisingAction).to.not.throw();
@@ -595,15 +595,15 @@ describe('ConditionalEventT', () => {
 
       it('registering event handler that throws an error should raise the next event handler', () => {
         // Arrange
-        var throwingHandler = createThrowingEventHandler();
-        var handler = createEventHandler();
+        const throwingHandler = createThrowingEventHandler();
+        const handler = createEventHandler();
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(throwingHandler);
         event.on(handler);
-        var raisingAction = () => event.raiseSafe(data);
+        const raisingAction = () => event.raiseSafe(data);
 
         // Assert
         expect(raisingAction).to.not.throw();
@@ -613,10 +613,10 @@ describe('ConditionalEventT', () => {
 
       it('unregistering event handler should not raise it', () => {
         // Arrange
-        var handler = createEventHandler();
-        var handlerToUnregister = createEventHandler();
+        const handler = createEventHandler();
+        const handlerToUnregister = createEventHandler();
 
-        var data = createData();
+        const data = createData();
 
         event.on(handler);
         event.on(handlerToUnregister);
@@ -631,13 +631,13 @@ describe('ConditionalEventT', () => {
 
       it('unregistering event handler should raise the not ramoved event handlers', () => {
         // Arrange
-        var handler1 = createEventHandler();
-        var handler2 = createEventHandler();
-        var handlerToUnregister = createEventHandler();
-        var handler3 = createEventHandler();
-        var handler4 = createEventHandler();
+        const handler1 = createEventHandler();
+        const handler2 = createEventHandler();
+        const handlerToUnregister = createEventHandler();
+        const handler3 = createEventHandler();
+        const handler4 = createEventHandler();
 
-        var data = createData();
+        const data = createData();
 
         event.on(handler1);
         event.on(handler2);
@@ -661,14 +661,14 @@ describe('ConditionalEventT', () => {
     describe('with condition', () => {
       it('raising should only call event handlers with truthy conditions', () => {
         // Arrange
-        var handler1 = createEventHandler();
-        var handler2 = createEventHandler();
-        var handler3 = createEventHandler();
+        const handler1 = createEventHandler();
+        const handler2 = createEventHandler();
+        const handler3 = createEventHandler();
 
-        var trueCondition = createConditionWithReturnValue(true);
-        var falseCondition = createConditionWithReturnValue(false);
+        const trueCondition = createConditionWithReturnValue(true);
+        const falseCondition = createConditionWithReturnValue(false);
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(handler1, trueCondition);
@@ -687,11 +687,11 @@ describe('ConditionalEventT', () => {
 
       it('raising should call the condition once', () => {
         // Arrange
-        var handler = createEventHandler();
+        const handler = createEventHandler();
 
-        var trueCondition = createConditionWithReturnValue(true);
+        const trueCondition = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(handler, trueCondition);
@@ -703,10 +703,10 @@ describe('ConditionalEventT', () => {
 
       it('registering twice with same event handler and same condition, raising, should raise once', () => {
         // Arrange
-        var handler = createEventHandler();
-        var condition = createConditionWithReturnValue(true);
+        const handler = createEventHandler();
+        const condition = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(handler, condition);
@@ -720,11 +720,11 @@ describe('ConditionalEventT', () => {
 
       it('registering twice with same event handler and different condition, raising, should raise twice', () => {
         // Arrange
-        var handler = createEventHandler();
-        var condition1 = createConditionWithReturnValue(true);
-        var condition2 = createConditionWithReturnValue(true);
+        const handler = createEventHandler();
+        const condition1 = createConditionWithReturnValue(true);
+        const condition2 = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(handler, condition1);
@@ -739,14 +739,14 @@ describe('ConditionalEventT', () => {
 
       it('registering event handler that throws an error should not throw error', () => {
         // Arrange
-        var throwingHandler = createThrowingEventHandler();
-        var condition = createConditionWithReturnValue(true);
+        const throwingHandler = createThrowingEventHandler();
+        const condition = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(throwingHandler, condition);
-        var raisingAction = () => event.raiseSafe(data);
+        const raisingAction = () => event.raiseSafe(data);
 
         // Assert
         expect(raisingAction).to.not.throw();
@@ -756,14 +756,14 @@ describe('ConditionalEventT', () => {
 
       it('registering event handler with condition that throws an error should not throw error', () => {
         // Arrange
-        var eventHandler = createEventHandler();
-        var throwingCondition = createThrowintCondition();
+        const eventHandler = createEventHandler();
+        const throwingCondition = createThrowintCondition();
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(eventHandler, throwingCondition);
-        var raisingAction = () => event.raiseSafe(data);
+        const raisingAction = () => event.raiseSafe(data);
 
         // Assert
         expect(raisingAction).to.not.throw();
@@ -773,17 +773,17 @@ describe('ConditionalEventT', () => {
 
       it('registering event handler that throws an error should raise the next event handler or condition', () => {
         // Arrange
-        var throwingHandler = createThrowingEventHandler();
-        var condition1 = createConditionWithReturnValue(true);
-        var handler = createEventHandler();
-        var condition2 = createConditionWithReturnValue(true);
+        const throwingHandler = createThrowingEventHandler();
+        const condition1 = createConditionWithReturnValue(true);
+        const handler = createEventHandler();
+        const condition2 = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(throwingHandler, condition1);
         event.on(handler, condition2);
-        var raisingAction = () => event.raiseSafe(data);
+        const raisingAction = () => event.raiseSafe(data);
 
         // Assert
         expect(raisingAction).to.not.throw();
@@ -795,17 +795,17 @@ describe('ConditionalEventT', () => {
 
       it('registering event handler with condition that throws an error should raise the next event handler or condition', () => {
         // Arrange
-        var handler1 = createThrowingEventHandler();
-        var throwingCondition = createThrowintCondition();
-        var handler2 = createEventHandler();
-        var condition2 = createConditionWithReturnValue(true);
+        const handler1 = createThrowingEventHandler();
+        const throwingCondition = createThrowintCondition();
+        const handler2 = createEventHandler();
+        const condition2 = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         // Act
         event.on(handler1, throwingCondition);
         event.on(handler2, condition2);
-        var raisingAction = () => event.raiseSafe(data);
+        const raisingAction = () => event.raiseSafe(data);
 
         // Assert
         expect(raisingAction).to.not.throw();
@@ -817,12 +817,12 @@ describe('ConditionalEventT', () => {
 
       it('unregistering event handler should not raise it', () => {
         // Arrange
-        var handler = createEventHandler();
-        var condition = createConditionWithReturnValue(true);
-        var handlerToUnregister = createEventHandler();
-        var conditionOfHandlerToUnregister = createConditionWithReturnValue(true);
+        const handler = createEventHandler();
+        const condition = createConditionWithReturnValue(true);
+        const handlerToUnregister = createEventHandler();
+        const conditionOfHandlerToUnregister = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         event.on(handler, condition);
         event.on(handlerToUnregister, conditionOfHandlerToUnregister);
@@ -838,18 +838,18 @@ describe('ConditionalEventT', () => {
 
       it('unregistering event handler should raise the not ramoved event handlers', () => {
         // Arrange
-        var handler1 = createEventHandler();
-        var condition1 = createConditionWithReturnValue(true);
-        var handler2 = createEventHandler();
-        var condition2 = createConditionWithReturnValue(true);
-        var handlerToUnregister = createEventHandler();
-        var conditionOfHandlerToUnregister = createConditionWithReturnValue(true);
-        var handler3 = createEventHandler();
-        var condition3 = createConditionWithReturnValue(true);
-        var handler4 = createEventHandler();
-        var condition4 = createConditionWithReturnValue(true);
+        const handler1 = createEventHandler();
+        const condition1 = createConditionWithReturnValue(true);
+        const handler2 = createEventHandler();
+        const condition2 = createConditionWithReturnValue(true);
+        const handlerToUnregister = createEventHandler();
+        const conditionOfHandlerToUnregister = createConditionWithReturnValue(true);
+        const handler3 = createEventHandler();
+        const condition3 = createConditionWithReturnValue(true);
+        const handler4 = createEventHandler();
+        const condition4 = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         event.on(handler1, condition1);
         event.on(handler2, condition2);
@@ -876,12 +876,12 @@ describe('ConditionalEventT', () => {
 
       it('registering same handler with different conditions, unregister without condition, raise, should not raise', () => {
         // Arrange
-        var handler = createEventHandler();
-        var condition1 = createConditionWithReturnValue(true);
-        var condition2 = createConditionWithReturnValue(true);
-        var condition3 = createConditionWithReturnValue(true);
+        const handler = createEventHandler();
+        const condition1 = createConditionWithReturnValue(true);
+        const condition2 = createConditionWithReturnValue(true);
+        const condition3 = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         event.on(handler, condition1);
         event.on(handler, condition2);
@@ -900,12 +900,12 @@ describe('ConditionalEventT', () => {
 
       it('registering same handler with different conditions, unregister with condition, raise, should raise correctly', () => {
         // Arrange
-        var handler = createEventHandler();
-        var condition1 = createConditionWithReturnValue(true);
-        var condition2 = createConditionWithReturnValue(true);
-        var condition3 = createConditionWithReturnValue(true);
+        const handler = createEventHandler();
+        const condition1 = createConditionWithReturnValue(true);
+        const condition2 = createConditionWithReturnValue(true);
+        const condition3 = createConditionWithReturnValue(true);
 
-        var data = createData();
+        const data = createData();
 
         event.on(handler, condition1);
         event.on(handler, condition2);

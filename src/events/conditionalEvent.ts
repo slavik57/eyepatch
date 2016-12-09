@@ -1,7 +1,7 @@
-import {IEventHandler} from './interfaces/iEventHandler';
-import {ICondition} from './interfaces/iCondition';
-import {IConditionalRaisableEvent} from './interfaces/iConditionalRaisableEvent';
-import {ConditionalEventT} from './conditionalEventT';
+import { IEventHandler } from './interfaces/iEventHandler';
+import { ICondition } from './interfaces/iCondition';
+import { IConditionalRaisableEvent } from './interfaces/iConditionalRaisableEvent';
+import { ConditionalEventT } from './conditionalEventT';
 
 export class ConditionalEvent implements IConditionalRaisableEvent {
   private _conditionalEventT = new ConditionalEventT<any>();
