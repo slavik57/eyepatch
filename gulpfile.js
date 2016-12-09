@@ -11,7 +11,8 @@ gulp.task("lint", function() {
     var config = { formatter: "verbose", emitError: (process.env.CI) ? true : false };
 
     return gulp.src([
-        "src/**/**.ts"
+        "src/**/**.ts",
+        "!src/**/*.d.ts"
     ])
         .pipe(tslint(config))
         .pipe(tslint.report());
@@ -19,9 +20,10 @@ gulp.task("lint", function() {
 
 var tsProject = tsc.createProject("tsconfig.json");
 
-gulp.task("build", function() {
+gulp.task("build", ["lint"], function() {
     var tsResults = gulp.src([
         "src/**/**.ts",
+        "!src/**/*.d.ts",
         "typings/main.d.ts/"
     ])
         .pipe(sourcemaps.init())
@@ -37,9 +39,9 @@ gulp.task("build", function() {
 });
 
 gulp.task("watch", ["default"], function() {
-    gulp.watch(["src/**/*.ts"], ["default"]);
+    gulp.watch(["src/**/*.ts", "!src/**/*.d.ts"], ["default"]);
 });
 
 gulp.task("default", function(cb) {
-    runSequence("lint", "build", cb);
+    runSequence("build", cb);
 });
