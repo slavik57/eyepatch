@@ -1,8 +1,8 @@
-import {expect} from 'chai';
-import {ICondition} from './interfaces/iCondition';
-import {IEventHandler} from './interfaces/iEventHandler';
-import {IConditionalEvent} from './interfaces/iConditionalEvent';
-import {ConditionalEvent} from './conditionalEvent';
+import { expect } from 'chai';
+import { ICondition } from './interfaces/iCondition';
+import { IEventHandler } from './interfaces/iEventHandler';
+import { IConditionalEvent } from './interfaces/iConditionalEvent';
+import { ConditionalEvent } from './conditionalEvent';
 
 interface ITestEventHandler extends IEventHandler {
   numberOfTimesCalled: number;

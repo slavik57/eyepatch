@@ -1,7 +1,7 @@
-import {expect} from 'chai';
-import {IObservableCollection} from './interfaces/iObservableCollection';
-import {IItemsChangedEventArgs} from './interfaces/iItemsChangedEventArgs';
-import {ObservableCollection} from './observableCollection';
+import { expect } from 'chai';
+import { IObservableCollection } from './interfaces/iObservableCollection';
+import { IItemsChangedEventArgs } from './interfaces/iItemsChangedEventArgs';
+import { ObservableCollection } from './observableCollection';
 
 interface ITestEventRegistration<T> {
   actualRaisedEventArgs: IItemsChangedEventArgs<T>[];

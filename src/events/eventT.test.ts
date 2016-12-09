@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import {IEventHandlerT} from './interfaces/iEventHandler';
-import {IEventT} from './interfaces/iEvent';
-import {EventT} from './eventT';
+import { IEventHandlerT } from './interfaces/iEventHandler';
+import { IEventT } from './interfaces/iEvent';
+import { EventT } from './eventT';
 
 interface ITestEventHandler<T> extends IEventHandlerT<T> {
   actualDataThatWasCalledWith: T[];

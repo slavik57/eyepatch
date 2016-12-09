@@ -1,7 +1,7 @@
-import {IEventT} from '../events/interfaces/iEvent';
-import {EventT} from '../events/eventT';
-import {IItemsChangedEventArgs} from './interfaces/iItemsChangedEventArgs';
-import {IObservableCollection} from './interfaces/iObservableCollection';
+import { IEventT } from '../events/interfaces/iEvent';
+import { EventT } from '../events/eventT';
+import { IItemsChangedEventArgs } from './interfaces/iItemsChangedEventArgs';
+import { IObservableCollection } from './interfaces/iObservableCollection';
 
 export class ObservableCollection<T> implements IObservableCollection<T> {
   private _items: T[] = [];

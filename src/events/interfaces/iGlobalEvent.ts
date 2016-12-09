@@ -1,4 +1,4 @@
-import {IEventHandlerT} from './iEventHandler';
+import { IEventHandlerT } from './iEventHandler';
 
 export interface IGlobalEvent {
   clearAllSubscribtions(eventName: string): void;

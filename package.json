@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "./node_modules/.bin/gulp",
+    "buildWatch": "./node_modules/.bin/gulp watch",
     "mochaTest": "./node_modules/.bin/mocha -c -b src/**/*.test.js",
     "mochaTestWatch": "./node_modules/.bin/mocha -c -b -w src/**/*.test.js",
     "test": "npm run mochaTest",

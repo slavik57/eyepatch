@@ -1,4 +1,4 @@
-import {IConditionalEvent, IConditionalEventT} from './iConditionalEvent';
+import { IConditionalEvent, IConditionalEventT } from './iConditionalEvent';
 
 export interface IConditionalRaisableEvent extends IConditionalEvent {
   raise(): void;
