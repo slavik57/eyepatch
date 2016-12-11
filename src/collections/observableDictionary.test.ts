@@ -4,6 +4,7 @@ import { IItemsChangedEventArgs } from './interfaces/iItemsChangedEventArgs';
 import { IKeyValue } from './interfaces/iKeyValue';
 import { IObservableDictionary } from './interfaces/iObservableDictionary';
 import { ObservableDictionary } from './observableDictionary';
+import { spy } from 'sinon';
 
 interface IPropertyWithValue {
   property: any;
@@ -1473,4 +1474,108 @@ describe('ObservableDictionary', () => {
       });
     });
   }
+
+  it('add/remove different types should raise events correctly', () => {
+    // Arrange
+    const dictionary = new ObservableDictionary<any, any>();
+
+    const key1 = {};
+    const key2 = 2;
+    const key3 = {};
+
+    const eventHandler: Sinon.SinonSpy = spy();
+
+    dictionary.itemsChanged.on(eventHandler);
+
+    // Act
+    dictionary.add(key1, {});
+    dictionary.add(key2, {});
+    dictionary.add(key3, {});
+    dictionary.remove(key2);
+    dictionary.remove(key1);
+
+    // Assert
+    expect(eventHandler.callCount).to.be.equal(5, 'should be called correct number of times');
+    expect(eventHandler.args[0][0].added).to.be.length(1, 'first time should add');
+    expect(eventHandler.args[0][0].removed).to.be.length(0, 'first time should not remove');
+    expect(eventHandler.args[0][0].added[0].key).to.be.equal(key1, 'should add key1');
+    expect(eventHandler.args[1][0].added).to.be.length(1, 'second time should add');
+    expect(eventHandler.args[1][0].removed).to.be.length(0, 'second time should not remove');
+    expect(eventHandler.args[1][0].added[0].key).to.be.equal(key2, 'second time should add key2');
+    expect(eventHandler.args[2][0].added).to.be.length(1, 'third time should add');
+    expect(eventHandler.args[2][0].removed).to.be.length(0, 'third time should not remove');
+    expect(eventHandler.args[2][0].added[0].key).to.be.equal(key3, 'third time should add key3');
+    expect(eventHandler.args[3][0].added).to.be.length(0, 'fourth time should not add');
+    expect(eventHandler.args[3][0].removed).to.be.length(1, 'fourth time should remove');
+    expect(eventHandler.args[3][0].removed[0].key).to.be.equal(key2, 'fourth time should remove key2');
+    expect(eventHandler.args[4][0].added).to.be.length(0, 'fifth time should not add');
+    expect(eventHandler.args[4][0].removed).to.be.length(1, 'fifth time should remove');
+    expect(eventHandler.args[4][0].removed[0].key).to.be.equal(key1, 'fifth time should remove key1');
+  });
+
+  it('add/remove strings and numbers with same values should raise events correctly', () => {
+    // Arrange
+    const dictionary = new ObservableDictionary<any, any>();
+
+    const key1 = '2';
+    const key2 = 2;
+
+    const eventHandler: Sinon.SinonSpy = spy();
+
+    dictionary.itemsChanged.on(eventHandler);
+
+    // Act
+    dictionary.add(key1, {});
+    dictionary.add(key2, {});
+    dictionary.remove(key2);
+    dictionary.remove(key1);
+
+    // Assert
+    expect(eventHandler.callCount).to.be.equal(4, 'should be called correct number of times');
+    expect(eventHandler.args[0][0].added).to.be.length(1, 'first time should add');
+    expect(eventHandler.args[0][0].removed).to.be.length(0, 'first time should not remove');
+    expect(eventHandler.args[0][0].added[0].key).to.be.equal(key1, 'should add key1');
+    expect(eventHandler.args[1][0].added).to.be.length(1, 'second time should add');
+    expect(eventHandler.args[1][0].removed).to.be.length(0, 'second time should not remove');
+    expect(eventHandler.args[1][0].added[0].key).to.be.equal(key2, 'second time should add key2');
+    expect(eventHandler.args[2][0].added).to.be.length(0, 'third time should not add');
+    expect(eventHandler.args[2][0].removed).to.be.length(1, 'third time should remove');
+    expect(eventHandler.args[2][0].removed[0].key).to.be.equal(key2, 'third time should remove key2');
+    expect(eventHandler.args[3][0].added).to.be.length(0, 'fourth time should not add');
+    expect(eventHandler.args[3][0].removed).to.be.length(1, 'fourth time should remove');
+    expect(eventHandler.args[3][0].removed[0].key).to.be.equal(key1, 'fourth time should remove key1');
+  });
+
+  it('add/remove strings and boleans with same values should raise events correctly', () => {
+    // Arrange
+    const dictionary = new ObservableDictionary<any, any>();
+
+    const key1 = 'true';
+    const key2 = true;
+
+    const eventHandler: Sinon.SinonSpy = spy();
+
+    dictionary.itemsChanged.on(eventHandler);
+
+    // Act
+    dictionary.add(key1, {});
+    dictionary.add(key2, {});
+    dictionary.remove(key2);
+    dictionary.remove(key1);
+
+    // Assert
+    expect(eventHandler.callCount).to.be.equal(4, 'should be called correct number of times');
+    expect(eventHandler.args[0][0].added).to.be.length(1, 'first time should add');
+    expect(eventHandler.args[0][0].removed).to.be.length(0, 'first time should not remove');
+    expect(eventHandler.args[0][0].added[0].key).to.be.equal(key1, 'should add key1');
+    expect(eventHandler.args[1][0].added).to.be.length(1, 'second time should add');
+    expect(eventHandler.args[1][0].removed).to.be.length(0, 'second time should not remove');
+    expect(eventHandler.args[1][0].added[0].key).to.be.equal(key2, 'second time should add key2');
+    expect(eventHandler.args[2][0].added).to.be.length(0, 'third time should not add');
+    expect(eventHandler.args[2][0].removed).to.be.length(1, 'third time should remove');
+    expect(eventHandler.args[2][0].removed[0].key).to.be.equal(key2, 'third time should remove key2');
+    expect(eventHandler.args[3][0].added).to.be.length(0, 'fourth time should not add');
+    expect(eventHandler.args[3][0].removed).to.be.length(1, 'fourth time should remove');
+    expect(eventHandler.args[3][0].removed[0].key).to.be.equal(key1, 'fourth time should remove key1');
+  });
 });
