@@ -13,4 +13,8 @@ export { GlobalEvent } from './src/events/globalEvent';
 
 export { IItemsChangedEventArgs } from './src/collections/interfaces/iItemsChangedEventArgs';
 export { IObservableCollection } from './src/collections/interfaces/iObservableCollection';
+export { IKeyValue } from './src/collections/interfaces/iKeyValue';
+export { IObservableDictionary } from './src/collections/interfaces/iObservableDictionary';
+
 export { ObservableCollection } from './src/collections/observableCollection';
+export { ObservableDictionary } from './src/collections/ObservableDictionary';
