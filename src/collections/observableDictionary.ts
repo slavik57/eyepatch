@@ -82,6 +82,7 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
 
   public remove(key: TKey): void {
     if (!this.containsKey(key)) {
+      console.log('not contains')
       return;
     }
 
@@ -115,7 +116,7 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
       return this._keyIdPropertyName in key;
     }
 
-    return this._keyIdsToKeysMap[<any>key] === key;
+    return this._keyIdsToKeysMap[this._getKeyIdForNotObject(key)] === key;
   }
 
   public containsValue(value: TValue) {
@@ -167,10 +168,22 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
     return newId;
   }
 
-  private _getNewKeyId(): number {
+  private _getNewKeyIdForObject(): any {
     this._lastKeyId++;
 
-    return this._lastKeyId;
+    return `obect_key_id_${this._lastKeyId}`;
+  }
+
+  private _getKeyIdForNotObject(key: TKey): any {
+    if (typeof key === 'number') {
+      return `not_object_number_${key}`;
+    } else if (typeof key === 'boolean') {
+      return `not_object_boolean_${key}`;
+    } else if (typeof key === 'string') {
+      return `not_object_string_${key}`;
+    } else {
+      return `not_obect_${key}`;
+    }
   }
 
   private _createKeyIdPropertyNameForCurrentDictionary(): string {
@@ -255,10 +268,10 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
 
   private _defineKeyId(key: TKey): any {
     if (!this._isObject(key)) {
-      return key;
+      return this._getKeyIdForNotObject(key);
     }
 
-    const keyId = this._getNewKeyId();
+    const keyId = this._getNewKeyIdForObject();
 
     const propertyDescriptor: PropertyDescriptor = {
       configurable: true,
@@ -276,7 +289,7 @@ export class ObservableDictionary<TKey, TValue> implements IObservableDictionary
     if (this._isObject(key)) {
       return key[this._keyIdPropertyName];
     } else {
-      return key;
+      return this._getKeyIdForNotObject(key);
     }
   }
 
