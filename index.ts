@@ -17,4 +17,4 @@ export { IKeyValue } from './src/collections/interfaces/iKeyValue';
 export { IObservableDictionary } from './src/collections/interfaces/iObservableDictionary';
 
 export { ObservableCollection } from './src/collections/observableCollection';
-export { ObservableDictionary } from './src/collections/ObservableDictionary';
+export { ObservableDictionary } from './src/collections/observableDictionary';
